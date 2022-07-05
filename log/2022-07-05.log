@@ -1,0 +1,6 @@
+[GIN-VUE-ADMIN]2022/07/05 - 11:57:43.165	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/initialize/router.go:21	use middleware logger
+[GIN-VUE-ADMIN]2022/07/05 - 11:57:43.203	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/initialize/router.go:24	use middleware cors
+[GIN-VUE-ADMIN]2022/07/05 - 11:57:43.204	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/initialize/router.go:26	register swagger handler
+[GIN-VUE-ADMIN]2022/07/05 - 11:57:43.230	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/initialize/router.go:56	router register success
+[GIN-VUE-ADMIN]2022/07/05 - 11:57:43.243	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/core/server.go:28	server run success on 	{"address": ":8888"}
+[GIN-VUE-ADMIN]2022/07/05 - 11:59:35.680	[34minfo[0m	E:/paper-project/gin-vue-admin-v2.4.3/server/api/v1/sys_initdb.go:51	前往初始化数据库

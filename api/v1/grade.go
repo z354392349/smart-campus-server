@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
+	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gin-vue-admin/service"
 
@@ -20,12 +21,21 @@ import (
 // @Success 200
 // @Router /excel/exportExcel [post]
 func GetGradeList(c *gin.Context) {
-	response.OkWithDetailed(response.PageResult{
-		List:     "t123",
-		Total:    1223,
-		Page:     456,
-		PageSize: 789,
-	}, "获取成功", c)
+
+	var pageInfo request.PageInfo
+	_ = c.ShouldBindJSON(&pageInfo)
+	if err, list, total := service.GetCreateList(pageInfo); err != nil {
+		fmt.Println(err)
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(response.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, "获取成功", c)
+	}
 }
 
 // @Tags excel
@@ -40,11 +50,6 @@ func CreateGrade(c *gin.Context) {
 
 	var grade model.Grade
 	_ = c.ShouldBindJSON(&grade)
-
-	// if err := utils.Verify(grade, utils.ApiVerify); err != nil {
-	// 	response.FailWithMessage(err.Error(), c)
-	// 	return
-	// }
 
 	if err := service.CreateGrade(grade); err != nil {
 		fmt.Println(err)

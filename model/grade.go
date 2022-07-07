@@ -11,5 +11,3 @@ type Grade struct {
 	Name        string `json:"name" form:"name" gorm:"column:name;comment:字典名（中）"`                  // 字典名（中）
 	Description string `json:"description" form:"description" gorm:"column:description;comment:描述"` // 描述
 }
-
-//	Id          string `json:"id" form:"id" gorm:"column:id;comment:字典名（英）"`                        // 字典名（英）

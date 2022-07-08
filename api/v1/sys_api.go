@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -68,6 +69,8 @@ func DeleteApi(c *gin.Context) {
 // @Router /api/getApiList [post]
 func GetApiList(c *gin.Context) {
 	var pageInfo request.SearchApiParams
+	fmt.Println(pageInfo, "pageInfo")
+	fmt.Println("----------------------------------------------------------")
 	_ = c.ShouldBindJSON(&pageInfo)
 	if err := utils.Verify(pageInfo.PageInfo, utils.PageInfoVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)

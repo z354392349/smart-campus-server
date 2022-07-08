@@ -75,6 +75,9 @@ func GetSysOperationRecordInfoList(info request.SysOperationRecordSearch) (err e
 		db = db.Where("status = ?", info.Status)
 	}
 	err = db.Count(&total).Error
+	if err != nil {
+		return
+	}
 	err = db.Order("id desc").Limit(limit).Offset(offset).Preload("User").Find(&sysOperationRecords).Error
 	return err, sysOperationRecords, total
 }

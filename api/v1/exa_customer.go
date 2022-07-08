@@ -94,6 +94,7 @@ func UpdateExaCustomer(c *gin.Context) {
 // @Param data body model.ExaCustomer true "客户ID"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /customer/customer [get]
+
 func GetExaCustomer(c *gin.Context) {
 	var customer model.ExaCustomer
 	_ = c.ShouldBindQuery(&customer)

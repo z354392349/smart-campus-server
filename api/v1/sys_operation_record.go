@@ -99,6 +99,7 @@ func FindSysOperationRecord(c *gin.Context) {
 // @Param data body request.SysOperationRecordSearch true "页码, 每页大小, 搜索条件"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /sysOperationRecord/getSysOperationRecordList [get]
+
 func GetSysOperationRecordList(c *gin.Context) {
 	var pageInfo request.SysOperationRecordSearch
 	_ = c.ShouldBindQuery(&pageInfo)

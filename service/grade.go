@@ -29,9 +29,6 @@ func CreateGrade(grade model.Grade) (err error) {
 //@param: info request.PageInfo
 //@return: err error list interface{}  total int64
 
-// api model.SysApi, info request.PageInfo, order string, desc bool
-// info request.PageInfo
-
 func GetCreateList(info request.SearchGradeParams) (err error, list interface{}, total int64) {
 	fmt.Println(info)
 	limit := info.PageSize
@@ -48,4 +45,24 @@ func GetCreateList(info request.SearchGradeParams) (err error, list interface{},
 	}
 	err = db.Debug().Limit(limit).Offset(offset).Find(&gradeList).Error
 	return err, gradeList, total
+}
+
+// @Author: 张佳伟
+// @Function: UpCreate
+// @Description: 更新年级
+// @Router: /grade/upGrade
+// @Date:2022/07/09 10:50:09
+func UpCreate(grade model.Grade) (err error) {
+	err = global.GVA_DB.Where("id = ?", grade.ID).First(&model.Grade{}).Updates(&grade).Error
+	return err
+}
+
+// @Author: 张佳伟
+// @Function:
+// @Description:
+// @Router:
+// @Date:2022/07/09 10:32:22
+func DeleteGrade(grade model.Grade) (err error) {
+	err = global.GVA_DB.Debug().Where("id = ?", grade.ID).Delete(&grade).Error
+	return err
 }

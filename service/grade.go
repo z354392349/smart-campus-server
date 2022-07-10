@@ -1,3 +1,13 @@
+/*
+ * @Author: zhangjiawei
+ * git config user.email 48988849@qq.com
+ * @Date: 2022-07-08 22:01:20
+ * @LastEditors: zhangjiawei
+ * git config user.email 48988849@qq.com
+ * @LastEditTime: 2022-07-10 15:56:26
+ * @FilePath: \student-server\service\grade.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 package service
 
 import (

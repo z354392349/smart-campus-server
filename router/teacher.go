@@ -10,12 +10,10 @@ func InitTeacherRouter(Router *gin.RouterGroup) {
 	Teacher := Router.Group("teacher")
 	{
 
-		Teacher.POST("createTeacher", v1.CreateTeacher)
+		Teacher.POST("createTeacher", v1.CreateTeacher)   // 新增教师
+		Teacher.GET("getTeacherList", v1.GetTeacherList)  // 获取教师列表
+		Teacher.PUT("upTeacher", v1.UpTeacher)            // 更新教师
+		Teacher.DELETE("deleteTeacher", v1.DeleteTeacher) // 删除教师
 
-		// Teacher.GET("getClassList", v1.GetGradeList)
-		// Grade.GET("getGradeList", v1.GetGradeList)  // 获取年级列表
-		// Grade.POST("createGrade", v1.CreateGrade)   // 新增年级信息
-		// Grade.PUT("upGrade", v1.UpGrade)            // 更新年级
-		// Grade.DELETE("deleteGrade", v1.DeleteGrade) // 删除年级
 	}
 }

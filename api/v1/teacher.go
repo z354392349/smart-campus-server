@@ -12,19 +12,16 @@ import (
 	"go.uber.org/zap"
 )
 
-// @Tags excel
-// @Summary 获取年级列表
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce  application/octet-stream
-// @Success 200
-// @Router /excel/exportExcel [post]
+// @Author: 张佳伟
+// @Function: GetTeacherList
+// @Description: 获取教师列表
+// @Router:/teacher/GetTeacherList
+// @Date: 2022/7/11 11:54:25
 
-func GetGradeList2(c *gin.Context) {
-
-	var pageInfo request.SearchGradeParams
+func GetTeacherList(c *gin.Context) {
+	var pageInfo request.SearchTeacherParams
 	_ = c.ShouldBindQuery(&pageInfo)
-	if err, list, total := service.GetCreateList(pageInfo); err != nil {
+	if err, list, total := service.GetTeacherList(pageInfo); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
@@ -39,8 +36,8 @@ func GetGradeList2(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function:
-// @Description:
+// @Function: CreateTeacher
+// @Description: 创建教师
 // @Router: /teacher/createTeacher
 // @Date:2022/07/10 19:46:37
 
@@ -58,16 +55,17 @@ func CreateTeacher(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function: UpGrade
-// @Description: 修改年级
-// @Router: /grade/upGrade
-// @Date:2022/07/09 10:25:34
-func UpGrade2(c *gin.Context) {
+// @Function: UpTeacher
+// @Description: 更新教师
+// @Router: /teacher/upTeacher
+// @Date: 2022/7/11 16:36:31
 
-	var grade model.Grade
-	_ = c.ShouldBindJSON(&grade)
+func UpTeacher(c *gin.Context) {
 
-	if err := service.UpCreate(grade); err != nil {
+	var teacher model.Teacher
+	_ = c.ShouldBindJSON(&teacher)
+
+	if err := service.UpTeacher(teacher); err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败"+err.Error(), c)
 	} else {
@@ -81,11 +79,11 @@ func UpGrade2(c *gin.Context) {
 // @Router: /grade/deleteGrade
 // @Date:2022/07/09 10:51:45
 
-func DeleteGrade2(c *gin.Context) {
-	var grade model.Grade
-	_ = c.ShouldBindJSON(&grade)
+func DeleteTeacher(c *gin.Context) {
+	var teacher model.Teacher
+	_ = c.ShouldBindJSON(&teacher)
 
-	if err := service.DeleteGrade(grade); err != nil {
+	if err := service.DeleteTeacher(teacher); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", c)
 	} else {

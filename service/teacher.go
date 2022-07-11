@@ -28,14 +28,14 @@ func GetTeacherList(info request.SearchTeacherParams) (err error, list interface
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&model.Teacher{})
-	var gradeList []model.Grade
+	var teacherList []model.Teacher
 
 	if info.Name != "" {
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Find(&gradeList).Error
-	return err, gradeList, total
+	err = db.Debug().Limit(limit).Offset(offset).Find(&teacherList).Error
+	return err, teacherList, total
 }
 
 // @Author: 张佳伟
@@ -45,7 +45,7 @@ func GetTeacherList(info request.SearchTeacherParams) (err error, list interface
 // @Date: 2022/7/11 16:37
 
 func UpTeacher(teacher model.Teacher) (err error) {
-	err = global.GVA_DB.Where("id = ?", teacher.ID).First(&model.Teacher{}).Updates(&teacher).Error
+	err = global.GVA_DB.Debug().Where("id = ?", teacher.ID).First(&model.Teacher{}).Updates(&teacher).Error
 	return err
 }
 

@@ -20,9 +20,9 @@ import (
 
 func GetClassList(c *gin.Context) {
 
-	var pageInfo request.SearchGradeParams
+	var pageInfo request.SearchClassParams
 	_ = c.ShouldBindQuery(&pageInfo)
-	if err, list, total := service.GetCreateList(pageInfo); err != nil {
+	if err, list, total := service.GetClassList(pageInfo); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
@@ -39,20 +39,20 @@ func GetClassList(c *gin.Context) {
 // @Author: 张佳伟
 // @Function: CreateClass
 // @Description: 创建年级
-// @Router:  /class/createClass
-// @Date:2022/07/10 14:42:24
+// @Router: /class/createClass
+// @Date: 2022/7/12 10:43:23
 
 func CreateClass(c *gin.Context) {
 	var class model.Class
 	_ = c.ShouldBindJSON(&class)
 
-	// if err := service.CreateGrade(class); err != nil {
-	// 	fmt.Println(err)
-	// 	global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
-	// 	response.FailWithMessage("创建失败", c)
-	// } else {
-	// 	response.OkWithMessage("创建成功", c)
-	// }
+	if err := service.CreateClass(class); err != nil {
+		fmt.Println(err)
+		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
+		response.FailWithMessage("创建失败", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
+	}
 
 }
 

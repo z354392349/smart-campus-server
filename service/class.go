@@ -10,58 +10,45 @@ import (
 	"gorm.io/gorm"
 )
 
-//@author: 张佳伟
-//@function: CreateGrade
-//@description: 新增年级
-//@param: api model.SysApi
-//@return: err error
+// @Author: 张佳伟
+// @Function: CreateClass
+// @Description: 创建班级
+// @Router: /class/createClass
+// @Date: 2022/7/12 10:37:12
 
-func CreateGrade1(grade model.Grade) (err error) {
-	if !errors.Is(global.GVA_DB.Where("name = ? ", grade.Name).First(&model.Grade{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同年级")
+func CreateClass(class model.Class) (err error) {
+	if !errors.Is(global.GVA_DB.Where("name = ? ", class.Name).First(&model.Class{}).Error, gorm.ErrRecordNotFound) {
+		return errors.New("存在相同班级")
 	}
-	return global.GVA_DB.Create(&grade).Error
+	return global.GVA_DB.Create(&class).Error
 }
 
-//@author: 张佳伟
-//@function: GetCreateList
-//@description: 查询年级列表
-//@param: info request.PageInfo
-//@return: err error list interface{}  total int64
+// @Author: 张佳伟
+// @Function: GetClassList
+// @Description: 获取班级列表
+// @Router: /class/getClassList
+// @Date: 2022/7/12 11:50:34
 
-func GetClassList(info request.SearchGradeParams) (err error, list interface{}, total int64) {
+func GetClassList(info request.SearchClassParams) (err error, list interface{}, total int64) {
 	fmt.Println(info)
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := global.GVA_DB.Model(&model.Grade{})
-	var gradeList []model.Grade
+	db := global.GVA_DB.Model(&model.Class{})
+	var classList []model.Class
 
 	if info.Name != "" {
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	if err != nil {
-		return
-	}
-	err = db.Debug().Limit(limit).Offset(offset).Find(&gradeList).Error
-	return err, gradeList, total
+	err = db.Debug().Limit(limit).Offset(offset).Find(&classList).Error
+	return err, classList, total
 }
 
-// @Author: 张佳伟
-// @Function: UpCreate
-// @Description: 更新年级
-// @Router: /grade/upGrade
-// @Date:2022/07/09 10:50:09
 func UpCreate1(grade model.Grade) (err error) {
 	err = global.GVA_DB.Where("id = ?", grade.ID).First(&model.Grade{}).Updates(&grade).Error
 	return err
 }
 
-// @Author: 张佳伟
-// @Function:
-// @Description:
-// @Router:
-// @Date:2022/07/09 10:32:22
 func DeleteGrade1(grade model.Grade) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", grade.ID).Delete(&grade).Error
 	return err

@@ -35,12 +35,11 @@ func GetClassList(info request.SearchClassParams) (err error, list interface{}, 
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&model.Class{})
 	var classList []model.Class
-
 	if info.Name != "" {
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Find(&classList).Error
+	err = db.Debug().Limit(limit).Offset(offset).Preload("Teacher").Preload("Grade").Find(&classList).Error
 	return err, classList, total
 }
 

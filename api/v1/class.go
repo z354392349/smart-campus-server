@@ -57,16 +57,17 @@ func CreateClass(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function: UpGrade
-// @Description: 修改年级
-// @Router: /grade/upGrade
-// @Date:2022/07/09 10:25:34
-func UpGrade1(c *gin.Context) {
+// @Function: UpClass
+// @Description: 更新班级
+// @Router:/class/upClass
+// @Date: 2022/7/14 16:23:24
 
-	var grade model.Grade
-	_ = c.ShouldBindJSON(&grade)
+func UpClass(c *gin.Context) {
 
-	if err := service.UpCreate(grade); err != nil {
+	var class model.Class
+	_ = c.ShouldBindJSON(&class)
+
+	if err := service.UpClass(class); err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败"+err.Error(), c)
 	} else {
@@ -75,16 +76,16 @@ func UpGrade1(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function:
-// @Description:
-// @Router: /grade/deleteGrade
-// @Date:2022/07/09 10:51:45
+// @Function: DeleteClass
+// @Description: 删除班级
+// @Router: /class/deleteClass
+// @Date: 2022/7/14 16:42:51
 
-func DeleteGrade1(c *gin.Context) {
-	var grade model.Grade
-	_ = c.ShouldBindJSON(&grade)
+func DeleteClass(c *gin.Context) {
+	var class model.Class
+	_ = c.ShouldBindJSON(&class)
 
-	if err := service.DeleteGrade(grade); err != nil {
+	if err := service.DeleteClass(class); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", c)
 	} else {

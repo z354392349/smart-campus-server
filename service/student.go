@@ -10,26 +10,14 @@ import (
 	"gorm.io/gorm"
 )
 
-// @Author: 张佳伟
-// @Function: CreateClass
-// @Description: 创建班级
-// @Router: /class/createClass
-// @Date: 2022/7/12 10:37:12
-
-func CreateClass(class model.Class) (err error) {
+func CreateClass1(class model.Class) (err error) {
 	if !errors.Is(global.GVA_DB.Where("name = ? ", class.Name).First(&model.Class{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同班级")
 	}
 	return global.GVA_DB.Create(&class).Error
 }
 
-// @Author: 张佳伟
-// @Function: GetClassList
-// @Description: 获取班级列表
-// @Router: /class/getClassList
-// @Date: 2022/7/12 11:50:34
-
-func GetClassList(info request.SearchClassParams) (err error, list interface{}, total int64) {
+func GetClassList1(info request.SearchClassParams) (err error, list interface{}, total int64) {
 	fmt.Println(info)
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
@@ -43,24 +31,12 @@ func GetClassList(info request.SearchClassParams) (err error, list interface{}, 
 	return err, classList, total
 }
 
-// @Author: 张佳伟
-// @Function: UpClass
-// @Description: 更新班级
-// @Router: /class/upClass
-// @Date: 2022/7/14 16:23
-
-func UpClass(class model.Class) (err error) {
+func UpClass1(class model.Class) (err error) {
 	err = global.GVA_DB.Where("id = ?", class.ID).First(&model.Class{}).Updates(&class).Error
 	return err
 }
 
-// @Author: 张佳伟
-// @Function: DeleteClass
-// @Description: 删除班级
-// @Router: /class/deleteClass
-// @Date: 2022/7/14 16:52:51
-
-func DeleteClass(class model.Class) (err error) {
+func DeleteClass1(class model.Class) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", class.ID).Delete(&class).Error
 	return err
 }

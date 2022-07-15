@@ -4,6 +4,7 @@ import (
 	"gin-vue-admin/global"
 )
 
+// TODO:学生表要加一个 状态， 记录毕业，还是离校，还是在上学
 type Student struct {
 	global.GVA_MODEL
 	Name      string `json:"name" form:"name" gorm:"column:name;comment:学生名称"`

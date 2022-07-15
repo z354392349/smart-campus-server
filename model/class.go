@@ -4,7 +4,7 @@ import (
 	"gin-vue-admin/global"
 )
 
-// TODO: 缺个班长, 灯学生表完成的
+// TODO: 缺个班长, 等学生表完成的
 type Class struct {
 	global.GVA_MODEL
 	Name        string   `json:"name" form:"name" gorm:"column:name;comment:班级名称"`

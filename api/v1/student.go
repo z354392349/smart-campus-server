@@ -12,11 +12,16 @@ import (
 	"go.uber.org/zap"
 )
 
-func GetClassList1(c *gin.Context) {
+// @Author: 张佳伟
+// @Function: GetStudentList1
+// @Description: 创建学生
+// @Router:/student/getStudentList
+// @Date: 2022/7/15 11:51:12
 
-	var pageInfo request.SearchClassParams
+func GetStudentList(c *gin.Context) {
+	var pageInfo request.SearchStudentParams
 	_ = c.ShouldBindQuery(&pageInfo)
-	if err, list, total := service.GetClassList(pageInfo); err != nil {
+	if err, list, total := service.GetStudentList(pageInfo); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
@@ -30,11 +35,17 @@ func GetClassList1(c *gin.Context) {
 	}
 }
 
-func CreateClass1(c *gin.Context) {
-	var class model.Class
-	_ = c.ShouldBindJSON(&class)
+// @Author: 张佳伟
+// @Function: CreateStudent
+// @Description: 创建学生
+// @Router:/student/createStudent
+// @Date: 2022/7/15 10:40:12
 
-	if err := service.CreateClass(class); err != nil {
+func CreateStudent(c *gin.Context) {
+	var student model.Student
+	_ = c.ShouldBindJSON(&student)
+
+	if err := service.CreateStudent(student); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
 		response.FailWithMessage("创建失败", c)
@@ -44,12 +55,18 @@ func CreateClass1(c *gin.Context) {
 
 }
 
-func UpClass1(c *gin.Context) {
+// @Author: 张佳伟
+// @Function: UpStudent
+// @Description: 更新学生
+// @Router:/student/upStudent
+// @Date: 2022/7/15 10:52
 
-	var class model.Class
-	_ = c.ShouldBindJSON(&class)
+func UpStudent(c *gin.Context) {
 
-	if err := service.UpClass(class); err != nil {
+	var student model.Student
+	_ = c.ShouldBindJSON(&student)
+
+	if err := service.UpStudent(student); err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败"+err.Error(), c)
 	} else {
@@ -57,11 +74,17 @@ func UpClass1(c *gin.Context) {
 	}
 }
 
-func DeleteClass1(c *gin.Context) {
-	var class model.Class
-	_ = c.ShouldBindJSON(&class)
+// @Author: 张佳伟
+// @Function: DeleteStudent
+// @Description:删除学生
+// @Router:/student/deleteStudent
+// @Date: 2022/7/15 10:52
 
-	if err := service.DeleteClass(class); err != nil {
+func DeleteStudent(c *gin.Context) {
+	var student model.Student
+	_ = c.ShouldBindJSON(&student)
+
+	if err := service.DeleteStudent(student); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", c)
 	} else {

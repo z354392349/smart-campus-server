@@ -24,7 +24,8 @@ func main() {
 	global.GVA_LOG = core.Zap()       // 初始化zap日志库
 	global.GVA_DB = initialize.Gorm() // gorm连接数据库
 	initialize.Timer()
-	global.GVA_DB.AutoMigrate(&model.ExamRoom{})
+	global.GVA_DB.AutoMigrate(&model.Exam{})
+	global.GVA_DB.AutoMigrate(&model.ExamItem{})
 	if global.GVA_DB != nil {
 		initialize.MysqlTables(global.GVA_DB) // 初始化表
 		// 程序结束前关闭数据库链接

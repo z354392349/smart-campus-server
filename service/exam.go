@@ -51,7 +51,11 @@ func GetExamList(info request.SearchExamParams) (err error, list interface{}, to
 // @Date:2022/07/16 20:17:14
 
 func UpExam(exam model.Exam) (err error) {
+	examItems := exam.ExamItem
 	err = global.GVA_DB.Where("id = ?", exam.ID).First(&model.Exam{}).Updates(&exam).Error
+	for _, examItem := range examItems {
+		err = global.GVA_DB.Model(&model.ExamItem{}).Where("exam_id = ? AND  course_id = ? ", exam.ID, examItem.CourseID).Updates(&examItem).Error
+	}
 	return err
 }
 
@@ -63,5 +67,6 @@ func UpExam(exam model.Exam) (err error) {
 
 func DeleteExam(exam model.Exam) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", exam.ID).Delete(&exam).Error
+	err = global.GVA_DB.Model(&model.ExamItem{}).Where("exam_id = ? AND  course_id = ? ", exam.ID).Error
 	return err
 }

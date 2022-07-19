@@ -9,6 +9,7 @@ func InitStudentRouter(Router *gin.RouterGroup) {
 	Student := Router.Group("student")
 	{
 
+		// todo: 缺一个
 		Student.GET("/getStudentList", v1.GetStudentList)  // 获取学生列表
 		Student.POST("/createStudent", v1.CreateStudent)   // 创建学生
 		Student.PUT("/upStudent", v1.UpStudent)            // 更新学生

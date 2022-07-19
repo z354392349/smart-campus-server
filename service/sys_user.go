@@ -104,6 +104,20 @@ func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
 	return err, reqUser
 }
 
+// @Author: 张佳伟
+// @Function: UpUserInfoByID
+// @Description:通过userid，修改账号信息
+// @Router: 无
+// @Date: 2022/7/19 15:47:23
+
+func UpUserInfoByID(sysUser model.SysUser) (err error, user model.SysUser) {
+	//err = global.GVA_DB.Updates(&reqUser).Error
+	//return err, reqUser
+
+	err = global.GVA_DB.Debug().Where("id = ?", sysUser.ID).First(&model.SysUser{}).Updates(&sysUser).Error
+	return err, sysUser
+}
+
 //@author: [SliverHorn](https://github.com/SliverHorn)
 //@function: FindUserById
 //@description: 通过id获取用户信息

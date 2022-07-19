@@ -111,6 +111,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 // @Param data body model.SysUser true "用户名, 昵称, 密码, 角色ID"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"注册成功"}"
 // @Router /user/register [post]
+
 func Register(c *gin.Context) {
 	var r request.Register
 	_ = c.ShouldBindJSON(&r)
@@ -135,6 +136,7 @@ func Register(c *gin.Context) {
 // @Param data body request.ChangePasswordStruct true "用户名, 原密码, 新密码"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
 // @Router /user/changePassword [put]
+
 func ChangePassword(c *gin.Context) {
 	var user request.ChangePasswordStruct
 	_ = c.ShouldBindJSON(&user)

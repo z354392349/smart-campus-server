@@ -20,12 +20,21 @@ import (
 // @name x-token
 // @BasePath /
 
+// 年级管理
+// 班级管理
+// 教师管理
+// 学生管理
+// 课程管理
+// 考场管理
+// 考试管理 - 考试项
+
 func main() {
 	global.GVA_VP = core.Viper()      // 初始化Viper
 	global.GVA_LOG = core.Zap()       // 初始化zap日志库
 	global.GVA_DB = initialize.Gorm() // gorm连接数据库
 	initialize.Timer()
-	global.GVA_DB.AutoMigrate(&model.ExamResult{})
+	global.GVA_DB.AutoMigrate(&model.Teacher{})
+	global.GVA_DB.AutoMigrate(&model.Student{})
 	if global.GVA_DB != nil {
 		initialize.MysqlTables(global.GVA_DB) // 初始化表
 		// 程序结束前关闭数据库链接

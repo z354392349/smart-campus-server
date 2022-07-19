@@ -45,6 +45,17 @@ func CreateStudent(c *gin.Context) {
 	var student model.Student
 	_ = c.ShouldBindJSON(&student)
 
+	// 创建用户账户
+	user := &model.SysUser{Username: student.Telephone, NickName: student.Name, Password: "123456", AuthorityId: "03"}
+	err, userReturn := service.Register(*user)
+	if err != nil {
+		global.GVA_LOG.Error("注册失败!", zap.Any("err", err))
+		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "账号注册失败", c)
+		return
+	}
+
+	// 创建学生信息
+	student.SysUserID = userReturn.ID
 	if err := service.CreateStudent(student); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
@@ -66,6 +77,16 @@ func UpStudent(c *gin.Context) {
 	var student model.Student
 	_ = c.ShouldBindJSON(&student)
 
+	// 更新用户账户
+	user := &model.SysUser{Username: student.Telephone, NickName: student.Name}
+	user.ID = student.SysUserID
+	err, userReturn := service.UpUserInfoByID(*user)
+	if err != nil {
+		global.GVA_LOG.Error("账户信息修改失败!", zap.Any("err", err))
+		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "账户信息修改失败", c)
+		return
+	}
+
 	if err := service.UpStudent(student); err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败"+err.Error(), c)
@@ -83,6 +104,16 @@ func UpStudent(c *gin.Context) {
 func DeleteStudent(c *gin.Context) {
 	var student model.Student
 	_ = c.ShouldBindJSON(&student)
+
+	var delStudent model.Student
+	_ = global.GVA_DB.Where("`id` = ?", student.ID).Find(&delStudent).Error
+
+	err := service.DeleteUser(float64(delStudent.SysUserID))
+	if err != nil {
+		global.GVA_LOG.Error("账户信息删除失败!", zap.Any("err", err))
+		response.FailWithMessage("账户信息删除失败", c)
+		return
+	}
 
 	if err := service.DeleteStudent(student); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))

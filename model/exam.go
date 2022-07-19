@@ -12,6 +12,6 @@ type Exam struct {
 	global.GVA_MODEL
 	Name        string     `json:"name" form:"name" gorm:"comment:考试名称名称"`
 	ExamItem    []ExamItem `json:"examItem" form:"examItem" `
-	GradeID     uint       `json:"gradeID" form:"gradeID" gorm:"comment:年级ID"`
+	ClassIDs    string     `json:"gradeID" form:"gradeID" gorm:"comment:班级ID，分割"`
 	Description string     `json:"description" form:"description" gorm:"comment:描述"`
 }

@@ -33,9 +33,7 @@ func GetStudentList(info request.SearchStudentParams) (err error, list interface
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	// TODO:语句需要改
 	err = db.Debug().Limit(limit).Offset(offset).Preload("Grade").Preload("Class").Find(&studentList).Error
-	//err = db.Debug().Limit(limit).Offset(offset).Find(&studentList).Error
 	return err, studentList, total
 }
 
@@ -58,5 +56,19 @@ func UpStudent(student model.Student) (err error) {
 
 func DeleteStudent(student model.Student) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", student.ID).Delete(&student).Error
+	return err
+}
+
+// @Author: 张佳伟
+// @Function: SetStudentsGradeAndClass
+// @Description: 批量设置学生的年级和班级
+// @Router: /student/setStudentsGradeAndClass
+// @Date: 2022/7/20 10:14:36
+
+func SetStudentsGradeAndClass(info request.SetStudentsGradeAndClass) (err error) {
+	studentsID := info.StudentsID
+	gradeID := info.GradeID
+	classID := info.ClassID
+	err = global.GVA_DB.Model(&model.Student{}).Where("id IN ?", studentsID).Updates(model.Student{GradeID: gradeID, ClassID: classID}).Error
 	return err
 }

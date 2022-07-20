@@ -122,3 +122,22 @@ func DeleteStudent(c *gin.Context) {
 		response.OkWithMessage("删除成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function: SetStudentsGradeAndClass
+// @Description: 批量设置学生的年级和班级
+// @Router: /student/setStudentsGradeAndClass
+// @Date: 2022/7/20 10:14:36
+
+func SetStudentsGradeAndClass(c *gin.Context) {
+
+	var info request.SetStudentsGradeAndClass
+	_ = c.ShouldBindJSON(&info)
+
+	if err := service.SetStudentsGradeAndClass(info); err != nil {
+		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
+		response.FailWithMessage("更新失败"+err.Error(), c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+}

@@ -31,7 +31,7 @@ func GetTeacherList(info request.SearchTeacherParams) (err error, list interface
 	var teacherList []model.Teacher
 
 	if info.Name != "" {
-		db = db.Where("Name = ?", info.Name)
+		db = db.Where("name LIKE ?", "%"+info.Name+"%")
 	}
 	err = db.Count(&total).Error
 	err = db.Debug().Limit(limit).Offset(offset).Preload("Course").Find(&teacherList).Error

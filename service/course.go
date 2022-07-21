@@ -37,7 +37,7 @@ func GetCourseList(info request.SearchCourseParams) (err error, list interface{}
 	var courseList []model.Course
 
 	if info.Name != "" {
-		db = db.Where("Name = ?", info.Name)
+		db = db.Where("name LIKE ?", "%"+info.Name+"%")
 	}
 	err = db.Count(&total).Error
 	if err != nil {

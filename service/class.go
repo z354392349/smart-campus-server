@@ -36,7 +36,7 @@ func GetClassList(info request.SearchClassParams) (err error, list interface{}, 
 	db := global.GVA_DB.Model(&model.Class{})
 	var classList []model.Class
 	if info.Name != "" {
-		db = db.Where("name = ?", info.Name)
+		db = db.Where("name LIKE ?", "%"+info.Name+"%")
 	}
 	if info.GradeID != 0 {
 		db = db.Where("grade_id = ?", info.GradeID)

@@ -34,7 +34,7 @@ func GetTeacherList(info request.SearchTeacherParams) (err error, list interface
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Find(&teacherList).Error
+	err = db.Debug().Limit(limit).Offset(offset).Preload("Course").Find(&teacherList).Error
 	return err, teacherList, total
 }
 

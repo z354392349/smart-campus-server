@@ -13,9 +13,9 @@ type Student struct {
 	Sex         int    `json:"sex" form:"sex" gorm:"comment:性别 1表示男，2表示女。"`
 	Telephone   string `json:"telephone" form:"telephone" gorm:"comment:家长电话"`
 	GradeID     uint   `json:"gradeID" form:"gradeID" gorm:"comment:外键年级ID;" `
-	Grade       *Grade `gorm:"foreignKey:GradeID;"`
+	Grade       *Grade `json:"grade" form:"grade" gorm:"foreignKey:GradeID;"`
 	ClassID     uint   `json:"classID" form:"classID" gorm:"comment:外键班级ID;" `
-	Class       *Class `gorm:"foreignKey:ClassID;"`
+	Class       *Class `json:"class" form:"class"  gorm:"foreignKey:ClassID;"`
 	SysUserID   uint   `json:"sysUserID" form:"sysUserID" gorm:"comment:用户UUID"`
 	Description string `json:"description" form:"description" gorm:"comment:描述"`
 }

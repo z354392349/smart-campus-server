@@ -48,8 +48,8 @@ func CreateClass(c *gin.Context) {
 
 	if err := service.CreateClass(class); err != nil {
 		fmt.Println(err)
-		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", c)
+		global.GVA_LOG.Error("创建失败存在相同班级!", zap.Any("err", err))
+		response.FailWithMessage("创建失败存在相同班级!", c)
 	} else {
 		response.OkWithMessage("创建成功", c)
 	}

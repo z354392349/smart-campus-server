@@ -30,7 +30,13 @@ func GetStudentList(info request.SearchStudentParams) (err error, list interface
 	db := global.GVA_DB.Model(&model.Student{})
 	var studentList []model.Student
 	if info.Name != "" {
-		db = db.Where("Name = ?", info.Name)
+		db = db.Where("name LIKE ?", "%"+info.Name+"%")
+	}
+	if info.GradeID != 0 {
+		db = db.Where("grade_id = ?", info.GradeID)
+	}
+	if info.ClassID != 0 {
+		db = db.Where("class_id = ?", info.ClassID)
 	}
 	err = db.Count(&total).Error
 	err = db.Debug().Limit(limit).Offset(offset).Preload("Grade").Preload("Class").Find(&studentList).Error

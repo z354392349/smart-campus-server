@@ -17,7 +17,7 @@ import (
 // @Date: 2022/7/12 10:37:12
 
 func CreateClass(class model.Class) (err error) {
-	if !errors.Is(global.GVA_DB.Where("name = ? ", class.Name).First(&model.Class{}).Error, gorm.ErrRecordNotFound) {
+	if !errors.Is(global.GVA_DB.Where("name = ? AND grade_id = ?", class.Name, class.GradeID).First(&model.Class{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同班级")
 	}
 	return global.GVA_DB.Create(&class).Error
@@ -36,7 +36,10 @@ func GetClassList(info request.SearchClassParams) (err error, list interface{}, 
 	db := global.GVA_DB.Model(&model.Class{})
 	var classList []model.Class
 	if info.Name != "" {
-		db = db.Where("Name = ?", info.Name)
+		db = db.Where("name = ?", info.Name)
+	}
+	if info.GradeID != 0 {
+		db = db.Where("grade_id = ?", info.GradeID)
 	}
 	err = db.Count(&total).Error
 	err = db.Debug().Limit(limit).Offset(offset).Preload("Teacher").Preload("Grade").Find(&classList).Error

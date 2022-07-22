@@ -92,3 +92,23 @@ func DeleteClass(c *gin.Context) {
 		response.OkWithMessage("删除成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function:SetClassMonitor
+// @Description: 班级设置班长
+// @Router:/class/deleteClass
+// @Date: 2022/7/22 15:01
+
+func SetClassMonitor(c *gin.Context) {
+
+	var info request.SetClassMonitor
+	_ = c.ShouldBindJSON(&info)
+
+	if err := service.SetClassMonitor(info); err != nil {
+		global.GVA_LOG.Error("设置班长失败!", zap.Any("err", err))
+		response.FailWithMessage("设置班长失败"+err.Error(), c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+
+}

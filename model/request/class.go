@@ -8,3 +8,10 @@ type SearchClassParams struct {
 	model.Class
 	PageInfo
 }
+
+// 班级设置班长
+
+type SetClassMonitor struct {
+	StudentID uint `json:"studentID" gorm:"comment:学生ID"`
+	ClassID   uint `json:"classID" gorm:"comment:班级ID;" `
+}

@@ -67,3 +67,14 @@ func DeleteClass(class model.Class) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", class.ID).Delete(&class).Error
 	return err
 }
+
+// @Author: 张佳伟
+// @Function:SetClassMonitor
+// @Description: 班级设置班长
+// @Router:/class/deleteClass
+// @Date: 2022/7/22 15:01
+
+func SetClassMonitor(info request.SetClassMonitor) (err error) {
+	err = global.GVA_DB.Model(&model.Class{}).Where("id = ?", info.ClassID).Updates(model.Student{ClassID: info.ClassID, GradeID: info.StudentID}).Error
+	return err
+}

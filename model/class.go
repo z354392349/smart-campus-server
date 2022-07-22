@@ -13,5 +13,7 @@ type Class struct {
 	Grade       *Grade   `json:"grade" gorm:"foreignKey:GradeID;"`
 	TeacherID   uint     `json:"teacherID" form:"teacherID" gorm:"comment:班主任"`
 	Teacher     *Teacher `json:"teacher" gorm:"foreignKey:TeacherID;"`
+	Monitor     *Student `json:"monitor" form:"monitor" gorm:"-"`
+	MonitorId   uint     `json:"monitorId" form:"monitorId" gorm:"comment:班长"`
 	Description string   `json:"description" form:"description" gorm:"comment:描述"`
 }

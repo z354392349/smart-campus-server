@@ -39,7 +39,10 @@ func GetStudentList(info request.SearchStudentParams) (err error, list interface
 		db = db.Where("class_id = ?", info.ClassID)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Preload("Grade").Preload("Class").Find(&studentList).Error
+	//err = db.Debug().Limit(limit).Offset(offset).Preload("Grade").Preload("Class").Find(&studentList).Error
+	join := "left join grades on grades.id = students.gradeID"
+	//join2 := "left join grades on grades.id = students.gradeID"
+	err = db.Debug().Limit(limit).Select("grades.name  as gradeName").Offset(offset).Joins(join).Find(&studentList).Error
 	return err, studentList, total
 }
 

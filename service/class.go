@@ -42,7 +42,7 @@ func GetClassList(info request.SearchClassParams) (err error, list interface{}, 
 		db = db.Where("grade_id = ?", info.GradeID)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Preload("Teacher").Preload("Grade").Find(&classList).Error
+	err = db.Debug().Limit(limit).Offset(offset).Preload("Teacher").Preload("Grade").Preload("Student").Find(&classList).Error
 	return err, classList, total
 }
 
@@ -71,10 +71,21 @@ func DeleteClass(class model.Class) (err error) {
 // @Author: 张佳伟
 // @Function:SetClassMonitor
 // @Description: 班级设置班长
-// @Router:/class/deleteClass
+// @Router:/class/setClassMonitor
 // @Date: 2022/7/22 15:01
 
 func SetClassMonitor(info request.SetClassMonitor) (err error) {
-	err = global.GVA_DB.Model(&model.Class{}).Where("id = ?", info.ClassID).Updates(model.Student{ClassID: info.ClassID, GradeID: info.StudentID}).Error
+	err = global.GVA_DB.Model(&model.Class{}).Where("id = ?", info.ClassID).Updates(&model.Class{MonitorID: info.StudentID}).Error
+	return err
+}
+
+// @Author: 张佳伟
+// @Function:SetClassMonitor
+// @Description: 班级设置班主任
+// @Router:/class/setClassMonitor
+// @Date: 2022/7/22 15:01
+
+func SetClassTeacher(info request.SetClassTeacher) (err error) {
+	err = global.GVA_DB.Debug().Model(&model.Class{}).Where("id = ?", info.ClassID).Updates(&model.Class{TeacherID: info.TeacherID}).Error
 	return err
 }

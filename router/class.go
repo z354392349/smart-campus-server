@@ -13,6 +13,7 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		Class.POST("createClass", v1.CreateClass)        // 新增班级信息
 		Class.PUT("upClass", v1.UpClass)                 // 更新班级
 		Class.PUT("setClassMonitor", v1.SetClassMonitor) // 设置班长
+		Class.PUT("setClassTeacher", v1.SetClassTeacher) // 设置班主任
 		Class.DELETE("deleteClass", v1.DeleteClass)      // 删除班级
 	}
 }

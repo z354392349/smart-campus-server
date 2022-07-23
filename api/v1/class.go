@@ -96,7 +96,7 @@ func DeleteClass(c *gin.Context) {
 // @Author: 张佳伟
 // @Function:SetClassMonitor
 // @Description: 班级设置班长
-// @Router:/class/deleteClass
+// @Router:/class/setClassMonitor
 // @Date: 2022/7/22 15:01
 
 func SetClassMonitor(c *gin.Context) {
@@ -107,6 +107,26 @@ func SetClassMonitor(c *gin.Context) {
 	if err := service.SetClassMonitor(info); err != nil {
 		global.GVA_LOG.Error("设置班长失败!", zap.Any("err", err))
 		response.FailWithMessage("设置班长失败"+err.Error(), c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+
+}
+
+// @Author: 张佳伟
+// @Function:SetClassMonitor
+// @Description: 班级设置班主任
+// @Router:/class/setClassTeacher
+// @Date: 2022/7/22 15:01
+
+func SetClassTeacher(c *gin.Context) {
+
+	var info request.SetClassTeacher
+	_ = c.ShouldBindJSON(&info)
+
+	if err := service.SetClassTeacher(info); err != nil {
+		global.GVA_LOG.Error("设置班主任失败!", zap.Any("err", err))
+		response.FailWithMessage("设置班主任失败"+err.Error(), c)
 	} else {
 		response.OkWithMessage("修改成功", c)
 	}

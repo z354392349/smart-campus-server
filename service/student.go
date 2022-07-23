@@ -30,19 +30,21 @@ func GetStudentList(info request.SearchStudentParams) (err error, list interface
 	db := global.GVA_DB.Model(&model.Student{})
 	var studentList []model.Student
 	if info.Name != "" {
-		db = db.Where("name LIKE ?", "%"+info.Name+"%")
+		db = db.Where("students.name LIKE ?", "%"+info.Name+"%")
 	}
 	if info.GradeID != 0 {
-		db = db.Where("grade_id = ?", info.GradeID)
+		db = db.Where("students.grade_id = ?", info.GradeID)
 	}
 	if info.ClassID != 0 {
-		db = db.Where("class_id = ?", info.ClassID)
+		db = db.Where("students.class_id = ?", info.ClassID)
 	}
+
 	err = db.Count(&total).Error
-	//err = db.Debug().Limit(limit).Offset(offset).Preload("Grade").Preload("Class").Find(&studentList).Error
-	join := "left join grades on grades.id = students.gradeID"
-	//join2 := "left join grades on grades.id = students.gradeID"
-	err = db.Debug().Limit(limit).Select("grades.name  as gradeName").Offset(offset).Joins(join).Find(&studentList).Error
+	leftJoinSql := "left join grades on grades.id = students.grade_id"
+	leftJoinSql2 := "left join classes on classes.id = students.class_id"
+	selectSql := "students.*, grades.name as grade_name, classes.name as class_name"
+	err = db.Debug().Limit(limit).Select(selectSql).Offset(offset).Joins(leftJoinSql).Joins(leftJoinSql2).Find(&studentList).Error
+
 	return err, studentList, total
 }
 

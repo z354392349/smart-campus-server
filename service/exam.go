@@ -34,13 +34,23 @@ func GetExamList(info request.SearchExamParams) (err error, list interface{}, to
 	offset := info.PageSize * (info.Page - 1)
 
 	db := global.GVA_DB.Model(&model.Exam{})
+	db1 := global.GVA_DB.Model(&model.ExamItem{})
 	var examList []model.Exam
+	// var examItem []model.ExamItem
 
 	if info.Name != "" {
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("ExamItem").Find(&examList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Grade").Find(&examList).Error
+
+	for i, _ := range examList {
+
+		leftJoinSql := "left join courses on exam_items.course_id = courses.id"
+		selectSql := "exam_items.*, courses.name as course_name "
+		err = db1.Debug().Select(selectSql).Where("exam_id = ?", examList[i].ID).Joins(leftJoinSql).Find(&examList[i].ExamItem).Error
+	}
+
 	return err, examList, total
 }
 
@@ -52,10 +62,46 @@ func GetExamList(info request.SearchExamParams) (err error, list interface{}, to
 
 func UpExam(exam model.Exam) (err error) {
 	examItems := exam.ExamItem
-	err = global.GVA_DB.Where("id = ?", exam.ID).First(&model.Exam{}).Updates(&exam).Error
-	for _, examItem := range examItems {
-		err = global.GVA_DB.Model(&model.ExamItem{}).Where("exam_id = ? AND  course_id = ? ", exam.ID, examItem.CourseID).Updates(&examItem).Error
+	examItemsUp := []model.ExamItem{}
+	examItemsCreate := []model.ExamItem{}
+	courseIDs := []uint{}
+	for _, v := range examItems {
+		if v.ID != 0 {
+			examItemsUp = append(examItemsUp, v)
+			courseIDs = append(courseIDs, v.CourseID)
+		} else {
+			v.ExamID = exam.ID
+			examItemsCreate = append(examItemsCreate, v)
+		}
 	}
+
+	// 更新考试数据
+	if err = global.GVA_DB.Where("id = ?", exam.ID).Debug().First(&model.Exam{}).Updates(&exam).Error; err != nil {
+		return
+	}
+
+	//删除考试项旧数据
+
+	if err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("exam_id = ? AND course_id not in ? ", exam.ID, courseIDs).Delete(model.ExamItem{}).Error; err != nil {
+		return
+	}
+
+	//更新考试项已有数据
+
+	if len(examItemsUp) != 0 {
+		for _, v := range examItemsUp {
+			if err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("id = ?", v.ID).Updates(&v).Error; err != nil {
+				return err
+			}
+		}
+	}
+
+	// 创建考试项新数据
+
+	if len(examItemsCreate) != 0 {
+		err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Create(&examItemsCreate).Error
+	}
+
 	return err
 }
 
@@ -67,6 +113,9 @@ func UpExam(exam model.Exam) (err error) {
 
 func DeleteExam(exam model.Exam) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", exam.ID).Delete(&exam).Error
-	err = global.GVA_DB.Model(&model.ExamItem{}).Where("exam_id = ? AND  course_id = ? ", exam.ID).Error
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.ExamItem{}).Error
 	return err
 }

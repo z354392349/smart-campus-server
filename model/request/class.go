@@ -19,6 +19,6 @@ type SetClassMonitor struct {
 // 班级设置班主任
 
 type SetClassTeacher struct {
-	TeacherID uint `json:"teacherID" gorm:"comment:学生ID"`
+	TeacherID uint `json:"teacherID" gorm:"comment:教师ID"`
 	ClassID   uint `json:"classID" gorm:"comment:班级ID;" `
 }

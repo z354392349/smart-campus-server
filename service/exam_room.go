@@ -6,6 +6,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+
 	"gorm.io/gorm"
 )
 
@@ -39,7 +40,7 @@ func GetExamRoomList(info request.SearchExamRoomParams) (err error, list interfa
 		db = db.Where("Name = ?", info.Name)
 	}
 	err = db.Count(&total).Error
-	err = db.Debug().Limit(limit).Offset(offset).Find(&examRoomList).Error
+	err = db.Debug().Limit(limit).Offset(offset).Preload("Teacher").Find(&examRoomList).Error
 	return err, examRoomList, total
 }
 
@@ -62,5 +63,16 @@ func UpExamRoom(examRoom model.ExamRoom) (err error) {
 
 func DeleteExamRoom(examRoom model.ExamRoom) (err error) {
 	err = global.GVA_DB.Debug().Where("id = ?", examRoom.ID).Delete(&examRoom).Error
+	return err
+}
+
+// @Author: 张佳伟
+// @Function: SetExamRoorTeacher
+// @Description: 设置班主任
+// @Router: /examRoom/setExamRoomTeacher
+// @Date:2022/07/25 10:07:56
+
+func SetExamRoomTeacher(info request.SetExamRoomTeacher) (err error) {
+	err = global.GVA_DB.Debug().Model(&model.ExamRoom{}).Where("id = ?", info.ExamRoomID).Updates(&model.ExamRoom{TeacherID: info.TeacherID}).Error
 	return err
 }

@@ -93,3 +93,23 @@ func DeleteExamRoom(c *gin.Context) {
 		response.OkWithMessage("删除成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function: SetExamRoorTeacher
+// @Description: 设置班主任
+// @Router: /examRoom/setExamRoomTeacher
+// @Date:2022/07/25 10:07:56
+
+func SetExamRoomTeacher(c *gin.Context) {
+
+	var info request.SetExamRoomTeacher
+	_ = c.ShouldBindJSON(&info)
+
+	if err := service.SetExamRoomTeacher(info); err != nil {
+		global.GVA_LOG.Error("设置监考老师失败!", zap.Any("err", err))
+		response.FailWithMessage("设置监考老师失败!"+err.Error(), c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+
+}

@@ -95,8 +95,8 @@ func DeleteExamRoom(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function: SetExamRoorTeacher
-// @Description: 设置班主任
+// @Function: SetExamRoomTeacher
+// @Description: 设置监考老师
 // @Router: /examRoom/setExamRoomTeacher
 // @Date:2022/07/25 10:07:56
 

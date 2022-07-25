@@ -10,7 +10,7 @@ func InitExamItemRouter(Router *gin.RouterGroup) {
 	ExamItem := Router.Group("examItem")
 	{
 
-		ExamItem.PUT("upExamItemRoomAllot", v1.UpExamItemRoomAllot) // 设置班主任
+		ExamItem.PUT("upExamItemRoomAllot", v1.UpExamItemRoomAllot) // 设置考场
 
 		// ExamItem.GET("getExamItemList", v1.GetExamItemList) // 获取考场列表
 		// ExamItem.POST("createExamItem", v1.CreateExamItem)        // 新增考场信息

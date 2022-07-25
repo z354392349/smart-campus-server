@@ -30,6 +30,7 @@ func GetExamRoomList1(c *gin.Context) {
 	}
 }
 
+// TODO :Allot 不应该是up
 // @Author: 张佳伟
 // @Function:UpExamItemRoomAllot
 // @Description:考试项，考场分配

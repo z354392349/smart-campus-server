@@ -3,7 +3,6 @@ package v1
 import (
 	"fmt"
 	"gin-vue-admin/global"
-	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gin-vue-admin/service"
@@ -30,48 +29,39 @@ func GetExamRoomList1(c *gin.Context) {
 	}
 }
 
-// TODO :Allot 不应该是up
 // @Author: 张佳伟
-// @Function:UpExamItemRoomAllot
+// @Function:allotExamItemRoom
 // @Description:考试项，考场分配
-// @Router:	/examItem/upExamItemRoomAllot
+// @Router:	/examItem/allotExamItemRoom
 // @Date:2022/07/25 16:47:35
 
-func UpExamItemRoomAllot(c *gin.Context) {
+func AllotExamItemRoom(c *gin.Context) {
 
-	var examRoom request.SetExamRoomItemAllot
+	var examRoom request.AllotExamRoomItem
 	_ = c.ShouldBindJSON(&examRoom)
 
-	if err := service.UpExamItemRoomAllot(examRoom); err != nil {
-		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
-		response.FailWithMessage("更新失败"+err.Error(), c)
+	if err := service.AllotExamItemRoom(examRoom); err != nil {
+		global.GVA_LOG.Error("分配失败!", zap.Any("err", err))
+		response.FailWithMessage("分配失败!"+err.Error(), c)
 	} else {
 		response.OkWithMessage("修改成功", c)
 	}
 }
 
-func DeleteExamRoom1(c *gin.Context) {
-	var examRoom model.ExamRoom
-	_ = c.ShouldBindJSON(&examRoom)
+// @Author: 张佳伟
+// @Function:CancelAllotExamItemRoom
+// @Description:撤销已分配的考场
+// @Router: /examItem/cancelAllotExamItemRoom
+// @Date:2022/07/26 16:03:21
 
-	if err := service.DeleteExamRoom(examRoom); err != nil {
+func CancelAllotExamItemRoom(c *gin.Context) {
+	var info request.CancelAllotExamRoomItem
+	_ = c.ShouldBindJSON(&info)
+
+	if err := service.CancelAllotExamItemRoom(info); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", c)
 	} else {
 		response.OkWithMessage("删除成功", c)
 	}
-}
-
-func SetExamRoomTeacher1(c *gin.Context) {
-
-	var info request.SetExamRoomTeacher
-	_ = c.ShouldBindJSON(&info)
-
-	if err := service.SetExamRoomTeacher(info); err != nil {
-		global.GVA_LOG.Error("设置监考老师失败!", zap.Any("err", err))
-		response.FailWithMessage("设置监考老师失败!"+err.Error(), c)
-	} else {
-		response.OkWithMessage("修改成功", c)
-	}
-
 }

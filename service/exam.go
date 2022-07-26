@@ -28,6 +28,7 @@ func CreateExam(exam model.Exam) (err error) {
 // @Description:获取考试列表
 // @Router:/exam/getExamList
 // @Date:2022/07/16 20:10:37
+
 func GetExamList(info request.SearchExamParams) (err error, list interface{}, total int64) {
 	fmt.Println(info)
 	limit := info.PageSize
@@ -87,7 +88,6 @@ func UpExam(exam model.Exam) (err error) {
 	}
 
 	//更新考试项已有数据
-
 	if len(examItemsUp) != 0 {
 		for _, v := range examItemsUp {
 			if err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("id = ?", v.ID).Updates(&v).Error; err != nil {
@@ -97,7 +97,6 @@ func UpExam(exam model.Exam) (err error) {
 	}
 
 	// 创建考试项新数据
-
 	if len(examItemsCreate) != 0 {
 		err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Create(&examItemsCreate).Error
 	}
@@ -112,10 +111,11 @@ func UpExam(exam model.Exam) (err error) {
 // @Date:2022/07/16 20:17:47
 
 func DeleteExam(exam model.Exam) (err error) {
-	err = global.GVA_DB.Debug().Where("id = ?", exam.ID).Delete(&exam).Error
-	if err != nil {
+
+	if err = global.GVA_DB.Debug().Where("id = ?", exam.ID).Delete(&exam).Error; err != nil {
 		return err
 	}
+
 	err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.ExamItem{}).Error
 	return err
 }

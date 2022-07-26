@@ -6,7 +6,6 @@ import (
 
 // TODO:
 // 这个前台 需要增加详情
-// TODO: 发布考试，默认全年级学生参加，将本次 成绩设置成为null
 
 type Exam struct {
 	global.GVA_MODEL

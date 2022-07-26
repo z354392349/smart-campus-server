@@ -17,10 +17,46 @@ import (
 // @Date:2022/07/16 20:06:51
 
 func CreateExam(exam model.Exam) (err error) {
-	if !errors.Is(global.GVA_DB.Where("name = ? ", exam.Name).First(&model.Exam{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同考试")
-	}
-	return global.GVA_DB.Create(&exam).Error
+
+	global.GVA_DB.Transaction(func(db *gorm.DB) error {
+
+		// 返回 nil 提交事务
+
+		if !errors.Is(global.GVA_DB.Where("name = ? ", exam.Name).First(&model.Exam{}).Error, gorm.ErrRecordNotFound) {
+			return errors.New("存在相同考试")
+		}
+
+		// TODO: 插入学生成绩
+		// 1.查询有年级有多少学生，
+		// 2.每个学生分别对应发布的科目，
+		// 3.整理出数据，插入 ExamResult
+		var studentList []model.Student
+		var examItemList = exam.ExamItem
+		var examResultList []model.ExamResult
+
+		if err = global.GVA_DB.Debug().Model(&model.Student{}).Where("grade_id = ?", exam.GradeID).Find(&studentList).Error; err != nil {
+			return err
+		}
+
+		for _, v := range studentList {
+			for _, k := range examItemList {
+				examResult := model.ExamResult{
+					ExamID:     exam.ID,
+					ExamItemID: k.ID,
+					StudentID:  v.ID,
+				}
+				examResultList = append(examResultList, examResult)
+			}
+		}
+
+		// TODO:examResultList 插入数据库
+		// examResultList
+		// return global.GVA_DB.Create(&exam).Error
+
+		return nil
+
+	})
+	return
 }
 
 // @Author: 张佳伟
@@ -116,6 +152,15 @@ func DeleteExam(exam model.Exam) (err error) {
 		return err
 	}
 
-	err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.ExamItem{}).Error
+	if err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.ExamItem{}).Error; err != nil {
+		return err
+	}
+
+	if err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.AllotExamRoom{}).Error; err != nil {
+		return err
+	}
+
+	// TODO: 删除考试成绩表
 	return err
+
 }

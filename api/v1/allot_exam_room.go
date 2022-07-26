@@ -19,8 +19,10 @@ import (
 // @Date: 2022/7/20 15:09
 
 func GetAllotExamRoomList(c *gin.Context) {
+
 	var pageInfo request.SearchAllotExamRoomParams
 	_ = c.ShouldBindQuery(&pageInfo)
+
 	if err, list, total := service.GetAllotExamRoomList(pageInfo); err != nil {
 		fmt.Println(err)
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))

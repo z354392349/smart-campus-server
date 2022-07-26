@@ -31,11 +31,29 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 	db := global.GVA_DB.Model(&model.AllotExamRoom{})
 	var allotExamRoomList []model.AllotExamRoom
 
-	//if info.Name != "" {
-	//	db = db.Where("Name = ?", info.Name)
-	//}
-	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("ExamItem").Find(&allotExamRoomList).Error
+	if info.Name != "" {
+		db = db.Where("name LIKE ?", "%"+info.Name+"%")
+	}
+
+	if info.GradeID != 0 {
+		db = db.Where("grade_id = ?", info.GradeID)
+	}
+	if info.ClassID != 0 {
+		db = db.Where("grade_id = ?", info.ClassID)
+	}
+	if err = db.Count(&total).Error; err != nil {
+		return
+	}
+
+	// TODO:sql 没写完呢
+	// leftJoinSql := "left join courses on exam_items.course_id = courses.id"
+	leftJoinSql1 := "left join students on students.id = allot_exam_rooms.student_id"       // 学生姓名
+	leftJoinSql2 := "left join exams on exams.id = allot_exam_rooms.exam_id"                // 考试名称
+	leftJoinSql3 := "left join exam_items on exam_items.id = allot_exam_rooms.exam_item_id" // 考试项目
+
+	// selectSql := "exam_items.*, courses.name as course_name "
+	// .Select(selectSql)
+	err = db.Limit(limit).Debug().Offset(offset).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Find(&allotExamRoomList).Error
 	return err, allotExamRoomList, total
 }
 

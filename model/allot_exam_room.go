@@ -4,12 +4,12 @@ import (
 	"gin-vue-admin/global"
 )
 
-// 考场分配结果
+// 考场分配表
 type AllotExamRoom struct {
 	global.GVA_MODEL
 	StudentID  uint `json:"studentID" form:"studentID" gorm:"comment:学生ID"`
 	ExamID     uint `json:"examID" form:"examID" gorm:"comment:考试;"`
-	ExamItemID uint `json:"examItemID" form:"examItemID" gorm:"comment:考试项目ID;" `
+	ExamItemID uint `json:"examItemID" form:"examItemID" gorm:"comment:考试项目ID;" ` // TODO: 这里应该换成科目
 	ExamRoomID uint `json:"examRoomID" form:"examRoomID" gorm:"comment:考试;"`
 
 	Exam     *Exam     `json:"exam" form:"exam" `         // gorm:"foreignKey:ExamID;"

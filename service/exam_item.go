@@ -26,12 +26,18 @@ func AllotExamItemRoom(info request.AllotExamRoomItem) (err error) {
 	// 3.判断他们的 不符合的考场id，
 	// 4.返回考场名称
 
-	// 查看时间是否冲突
 	var examItem model.ExamItem            // 作为比较的考试项目
 	var examItemList []model.ExamItem      // 可能冲突的考试项
 	var clashExamRoomList []model.ExamRoom // 确定冲突的考场
 
 	global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("id = ?", info.ExamItemID).Find(&examItem)
+
+	// 查看是否重复已经分配
+	if examItem.ExamRoomIDs != "" {
+		return errors.New("已经分配过考场,请勿重复分配")
+	}
+
+	// 查看时间是否冲突
 	global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("end_time > ?  and exam_room_ids is not null ", examItem.StartTime).Find(&examItemList)
 
 	var clashExamRoomIDs []int // 保存所有冲突的id
@@ -94,7 +100,7 @@ func AllotExamItemRoom(info request.AllotExamRoomItem) (err error) {
 		allotExamRoom := model.AllotExamRoom{
 			StudentID:  v.ID,
 			ExamID:     info.ExamID,
-			ExamItemID: info.ExamItemID,
+			CourseID:   examItem.CourseID,
 			ExamRoomID: examRoom[ExamRoomI].ID,
 		}
 		allotExamRoomList = append(allotExamRoomList, allotExamRoom)

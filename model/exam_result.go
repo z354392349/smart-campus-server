@@ -8,12 +8,12 @@ import (
 
 type ExamResult struct {
 	global.GVA_MODEL
-	ExamID     uint `json:"examID" form:"examID" gorm:"comment:考试ID;"`
-	ExamItemID uint `json:"examItemID" form:"examItemID" gorm:"comment:考试项ID;" `
-	StudentID  uint `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
-	Result     int  `json:"result" form:"result" gorm:"comment:成绩;" `
+	ExamID    uint `json:"examID" form:"examID" gorm:"comment:考试ID;"`
+	StudentID uint `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
+	Result    int  `json:"result" form:"result" gorm:"comment:成绩;" `
+	CourseID  uint `json:"courseID" form:"courseID" gorm:"comment:科目ID;" `
 
-	GradeID     string `json:"gradeID" form:"gradeID" gorm:"-"`         // 年级名称 根据StudentID
+	GradeName   string `json:"gradeName" form:"gradeName" gorm:"-"`     // 年级名称 根据StudentID
 	ClassName   string `json:"className" form:"className" gorm:"-"`     // 班级名称 根据StudentID
 	StudentName string `json:"studentName" form:"studentName" gorm:"-"` // 学生姓名 根据StudentID
 	CourseName  string `json:"courseName" form:"courseName" gorm:"-"`   // 科目名称 根据ExamItemID

@@ -20,13 +20,10 @@ func CreateExam(exam model.Exam) (err error) {
 
 	global.GVA_DB.Transaction(func(db *gorm.DB) error {
 
-		// 返回 nil 提交事务
-
 		if !errors.Is(global.GVA_DB.Where("name = ? ", exam.Name).First(&model.Exam{}).Error, gorm.ErrRecordNotFound) {
 			return errors.New("存在相同考试")
 		}
 
-		// TODO: 插入学生成绩
 		// 1.查询有年级有多少学生，
 		// 2.每个学生分别对应发布的科目，
 		// 3.整理出数据，插入 ExamResult
@@ -41,17 +38,17 @@ func CreateExam(exam model.Exam) (err error) {
 		for _, v := range studentList {
 			for _, k := range examItemList {
 				examResult := model.ExamResult{
-					ExamID:     exam.ID,
-					ExamItemID: k.ID,
-					StudentID:  v.ID,
+					ExamID:    exam.ID,
+					StudentID: v.ID,
+					CourseID:  k.CourseID,
 				}
 				examResultList = append(examResultList, examResult)
 			}
 		}
 
-		// TODO:examResultList 插入数据库
-		// examResultList
-		// return global.GVA_DB.Create(&exam).Error
+		if err = global.GVA_DB.Create(&examResultList).Error; err != nil {
+			return err
+		}
 
 		return nil
 

@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitExamResultResultRouter(Router *gin.RouterGroup) {
+func InitExamResultRouter(Router *gin.RouterGroup) {
 	ExamResult := Router.Group("examResult")
 	{
 		ExamResult.GET("getExamResultList", v1.GetExamResultList) // 获取考试成绩列表

@@ -77,7 +77,7 @@ func AllotExamItemRoom(info request.AllotExamRoomItem) (err error) {
 		return errors.New("考场容量无法容纳" + strconv.Itoa(len(student)) + "人")
 	}
 
-	// 可以容纳学生，更新 ExamItem 的 ExamRoomIDs 字段，说明占用的 考场号
+	// 可以容纳学生，更新 ExamItem 的 ExamRoomIDs 字段，说明占用的 考场号, 考场已分配
 	if err = global.GVA_DB.Model(&model.ExamItem{}).Debug().Where("id = ? ", info.ExamItemID).Updates(model.ExamItem{ExamRoomIDs: info.ExamRoomIDs}).Error; err != nil {
 		return
 	}

@@ -35,6 +35,11 @@ func CreateExam(exam model.Exam) (err error) {
 			return err
 		}
 
+		if err = global.GVA_DB.Create(&exam).Error; err != nil {
+			return err
+		}
+
+		// 成绩初始值整理
 		for _, v := range studentList {
 			for _, k := range examItemList {
 				examResult := model.ExamResult{
@@ -46,6 +51,7 @@ func CreateExam(exam model.Exam) (err error) {
 			}
 		}
 
+		// 成绩初始值插入数据库
 		if err = global.GVA_DB.Create(&examResultList).Error; err != nil {
 			return err
 		}

@@ -64,6 +64,17 @@ func GetExamResultList(info request.SearchExamResultParams) (err error, list int
 	db := global.GVA_DB.Model(&model.ExamResult{})
 	var examResultList []model.ExamResult
 
+	leftJoinSql1 := "left join students on students.id = exam_results.student_id" // 学生姓名
+	leftJoinSql2 := "left join exams on exams.id = exam_results.exam_id"          // 考试名称
+	leftJoinSql3 := "left join grades on grades.id = students.grade_id"           // 年级名称
+	leftJoinSql4 := "left join classes on classes.id = students.class_id"         // 班级名称
+	leftJoinSql5 := "left join courses on courses.id = exam_results.course_id"    // 科目名称
+	// .Joins(leftJoinSql1)
+	//
+	selectSql := "exam_results.*, students.name as student_name,  exams.name as exam_name, grades.name as grade_name,  classes.name as class_name, courses.name as course_name"
+
+	db = db.Limit(limit).Offset(offset).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Joins(leftJoinSql4).Joins(leftJoinSql5)
+
 	if info.Name != "" {
 		db = db.Where("Name LIKE ?", "%"+info.Name+"%")
 	}
@@ -75,10 +86,11 @@ func GetExamResultList(info request.SearchExamResultParams) (err error, list int
 	if info.ClassID != 0 {
 		db = db.Where("grade_id  = ?", info.ClassID)
 	}
+	if err = db.Count(&total).Error; err != nil {
+		return
+	}
 
-	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Find(&examResultList).Error
-
+	err = db.Debug().Find(&examResultList).Error
 	return err, examResultList, total
 }
 

@@ -3,7 +3,6 @@ package v1
 import (
 	"fmt"
 	"gin-vue-admin/global"
-	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gin-vue-admin/service"
@@ -35,41 +34,21 @@ func GetExamResultList(c *gin.Context) {
 	}
 }
 
-func CreateExam1(c *gin.Context) {
+// @Author: 张佳伟
+// @Function:UpExamResult
+// @Description:更新学生成绩
+// @Router:/examResult/upExamResult/
+// @Date:2022/07/28 17:37:05
 
-	var exam model.Exam
-	_ = c.ShouldBindJSON(&exam)
-	if err := service.CreateExam(exam); err != nil {
-		fmt.Println(err)
-		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", c)
-	} else {
-		response.OkWithMessage("创建成功", c)
-	}
+func UpExamResult(c *gin.Context) {
 
-}
-
-func UpExam1(c *gin.Context) {
-
-	var exam model.Exam
+	var exam request.SetExamResultParams
 	_ = c.ShouldBindJSON(&exam)
 
-	if err := service.UpExam(exam); err != nil {
+	if err := service.UpExamResult(exam); err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
 		response.FailWithMessage("更新失败"+err.Error(), c)
 	} else {
 		response.OkWithMessage("修改成功", c)
-	}
-}
-
-func DeleteExam1(c *gin.Context) {
-	var exam model.Exam
-	_ = c.ShouldBindJSON(&exam)
-
-	if err := service.DeleteExam(exam); err != nil {
-		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
-		response.FailWithMessage("删除失败", c)
-	} else {
-		response.OkWithMessage("删除成功", c)
 	}
 }

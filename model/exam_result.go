@@ -8,8 +8,9 @@ import (
 
 type ExamResult struct {
 	global.GVA_MODEL
-	ExamID    uint `json:"examID" form:"examID" gorm:"comment:考试ID;"`
-	Result    int  `json:"result" form:"result" gorm:"comment:成绩;" `
-	CourseID  uint `json:"courseID" form:"courseID" gorm:"comment:科目ID;" `
-	StudentID uint `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
+	ExamID      uint   `json:"examID" form:"examID" gorm:"comment:考试ID;"`
+	Result      int    `json:"result" form:"result" gorm:"comment:成绩;" `
+	CourseID    uint   `json:"courseID" form:"courseID" gorm:"comment:科目ID;" `
+	StudentID   uint   `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
+	Description string `json:"description" form:"description" gorm:"comment:描述"`
 }

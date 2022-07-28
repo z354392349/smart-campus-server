@@ -9,4 +9,5 @@ type ExamResult struct {
 	StudentName string `json:"studentName" form:"studentName"` // 学生姓名
 	CourseName  string `json:"courseName" form:"courseName"`   // 科目名称
 	Result      int    `json:"result" form:"result"`           // 成绩
+	Description string `json:"description" form:"description"` // 描述
 }

@@ -38,7 +38,7 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 		return
 	}
 
-	if err = db.Count(&total).Error; err != nil {
+	if err = db.Limit(-1).Offset(-1).Count(&total).Error; err != nil {
 		return
 	}
 	return err, allotExamRoomList, total

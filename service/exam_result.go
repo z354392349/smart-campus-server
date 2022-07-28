@@ -48,7 +48,7 @@ func GetExamResultList(info request.SearchExamResultParams) (err error, list int
 		return
 	}
 
-	if err = db.Count(&total).Error; err != nil {
+	if err = db.Limit(-1).Offset(-1).Count(&total).Error; err != nil {
 		return
 	}
 	return err, examResultList, total

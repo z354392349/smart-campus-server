@@ -10,6 +10,6 @@ func InitExamResultRouter(Router *gin.RouterGroup) {
 	ExamResult := Router.Group("examResult")
 	{
 		ExamResult.GET("getExamResultList", v1.GetExamResultList) // 获取考试成绩列表
-		ExamResult.POST("upExamResult", v1.UpExamResult)          // 新增考试
+		ExamResult.PUT("upExamResult", v1.UpExamResult)           // 新增考试
 	}
 }

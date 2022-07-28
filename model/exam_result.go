@@ -12,11 +12,4 @@ type ExamResult struct {
 	Result    int  `json:"result" form:"result" gorm:"comment:成绩;" `
 	CourseID  uint `json:"courseID" form:"courseID" gorm:"comment:科目ID;" `
 	StudentID uint `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
-
-	ExamName    string `json:"examName" form:"examName"`        // 考试名称 1
-	CourseName  string `json:"courseName" form:"courseName"`    // 科目名称1
-	StudentName string `json:"studentName" form:"studentName" ` // 学生姓名 1
-	GradeName   string `json:"gradeName" form:"gradeName" `     // 年级名称
-	ClassName   string `json:"className" form:"className" `     // 班级名称
-
 }

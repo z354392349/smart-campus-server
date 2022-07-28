@@ -6,6 +6,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	"gin-vue-admin/model/response"
 
 	"gorm.io/gorm"
 )
@@ -75,20 +76,26 @@ func GetExamList(info request.SearchExamParams) (err error, list interface{}, to
 
 	db := global.GVA_DB.Model(&model.Exam{})
 	db1 := global.GVA_DB.Model(&model.ExamItem{})
-	var examList []model.Exam
+	var examList []response.Exam
 	// var examItem []model.ExamItem
 
 	if info.Name != "" {
 		db = db.Where("Name = ?", info.Name)
 	}
-	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Grade").Find(&examList).Error
+
+	if err = db.Count(&total).Error; err != nil {
+		return
+	}
+
+	if err = db.Limit(limit).Offset(offset).Preload("Grade").Find(&examList).Error; err != nil {
+		return
+	}
 
 	for i, _ := range examList {
 
-		leftJoinSql := "left join courses on exam_items.course_id = courses.id"
+		leftJoinSql1 := "left join courses on exam_items.course_id = courses.id"
 		selectSql := "exam_items.*, courses.name as course_name "
-		err = db1.Debug().Select(selectSql).Where("exam_id = ?", examList[i].ID).Joins(leftJoinSql).Find(&examList[i].ExamItem).Error
+		err = db1.Debug().Select(selectSql).Where("exam_id = ?", examList[i].ID).Joins(leftJoinSql1).Find(&examList[i].ExamItem).Error
 	}
 
 	return err, examList, total

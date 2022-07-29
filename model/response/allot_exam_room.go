@@ -11,6 +11,7 @@ type AllotExamRoom struct {
 	ExamName     string `json:"examName" form:"examName"`         // 考试名称
 	CourseName   string `json:"courseName" form:"courseName"`     // 科目名称
 	ExamRoomName string `json:"examRoomName" form:"examRoomName"` // 考场房间名称
-	GradeName    string `json:"gradeName" form:"gradeName"`       // 考场房间名称
-	ClassName    string `json:"className" form:"className"`       // 考场房间名称
+	Address      string `json:"address" form:"address"`           // 考场地址
+	GradeName    string `json:"gradeName" form:"gradeName"`       // 年级
+	ClassName    string `json:"className" form:"className"`       // 班级
 }

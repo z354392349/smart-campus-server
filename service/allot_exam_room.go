@@ -20,7 +20,7 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 	leftJoinSql5 := "left join courses on courses.id = allot_exam_rooms.course_id"          // 科目名称
 	leftJoinSql6 := "left join exam_rooms on exam_rooms.id = allot_exam_rooms.exam_room_id" // 考场名称
 
-	selectSql := "allot_exam_rooms.*, students.name as student_name, exams.name as exam_name, grades.name as grade_name, classes.name as class_name, courses.name as course_name, exam_rooms.name as exam_room_name"
+	selectSql := "allot_exam_rooms.*, students.name as student_name, exams.name as exam_name, grades.name as grade_name, classes.name as class_name, courses.name as course_name, exam_rooms.name as exam_room_name, exam_rooms.address as address"
 	db := global.GVA_DB.Model(&model.AllotExamRoom{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Joins(leftJoinSql4).Joins(leftJoinSql5).Joins(leftJoinSql6)
 
 	if info.Name != "" {

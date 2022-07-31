@@ -37,7 +37,6 @@ func CreateCarAccess(c *gin.Context) {
 // @Date:2022/07/29 17:35:43
 
 func GetCarAccessList(c *gin.Context) {
-
 	var pageInfo request.SearchCarAccess
 	_ = c.ShouldBindQuery(&pageInfo)
 	if err, list, total := service.GetCarAccessList(pageInfo); err != nil {

@@ -12,6 +12,12 @@ import (
 	"go.uber.org/zap"
 )
 
+// @Author: 张佳伟
+// @Function:CreateTeacherAccess
+// @Description:创建教师通行记录
+// @Router:/teacherAccess/createTeacherAccess
+// @Date:2022/08/01 10:45:48
+
 func CreateTeacherAccess(c *gin.Context) {
 	var teacherAccess model.TeacherAccess
 	_ = c.ShouldBindJSON(&teacherAccess)
@@ -23,6 +29,12 @@ func CreateTeacherAccess(c *gin.Context) {
 		response.OkWithMessage("创建成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function:GetTeacherAccessList
+// @Description:获取教师通行记录
+// @Router:/teacherAccess/getTeacherAccessList
+// @Date:2022/08/01 10:45:48
 
 func GetTeacherAccessList(c *gin.Context) {
 	var pageInfo request.SearchTeacherAccess

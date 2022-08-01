@@ -8,9 +8,21 @@ import (
 	"gin-vue-admin/model/response"
 )
 
+// @Author: 张佳伟
+// @Function:CreateTeacherAccess
+// @Description:创建教师通行记录
+// @Router:/teacherAccess/createTeacherAccess
+// @Date:2022/08/01 10:45:48
+
 func CreateTeacherAccess(teacherAccess model.TeacherAccess) (err error) {
 	return global.GVA_DB.Debug().Create(&teacherAccess).Error
 }
+
+// @Author: 张佳伟
+// @Function:GetTeacherAccessList
+// @Description:获取教师通行记录
+// @Router:/teacherAccess/getTeacherAccessList
+// @Date:2022/08/01 10:45:48
 
 func GetTeacherAccessList(info request.SearchTeacherAccess) (err error, list interface{}, total int64) {
 	fmt.Println(info)

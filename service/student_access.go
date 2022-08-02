@@ -26,7 +26,7 @@ func GetStudentAccessList(info request.SearchStudentAccess) (err error, list int
 	leftJoinSql2 := "left join grades on grades.id = students.grade_id"               // 年级名称
 	leftJoinSql3 := "left join classes on classes.id = students.class_id"             // 班级名称
 	selectSql := "student_accesses.*, students.name as student_name, grades.name as grade_name, classes.name as class_name"
-	db = db.Debug().Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3)
+	db = db.Debug().Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Order("time desc")
 
 	if info.StudentName != "" {
 		db = db.Where("students.name LIKE ?", "%"+info.StudentName+"%")

@@ -33,7 +33,7 @@ func GetCarAccessList(info request.SearchCarAccess) (err error, list interface{}
 
 	leftJoinSql1 := "left join teachers on teachers.id = car_accesses.teacher_id" // 教师姓名
 	selectSql := "car_accesses.*, teachers.name as teacher_name"
-	db = db.Debug().Select(selectSql).Joins(leftJoinSql1)
+	db = db.Debug().Select(selectSql).Joins(leftJoinSql1).Order("time desc")
 
 	if info.TeacherName != "" {
 		db = db.Where("teachers.name LIKE ?", "%"+info.TeacherName+"%")

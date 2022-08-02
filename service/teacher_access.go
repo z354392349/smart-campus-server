@@ -33,7 +33,7 @@ func GetTeacherAccessList(info request.SearchTeacherAccess) (err error, list int
 
 	leftJoinSql1 := "left join teachers on teachers.id = teacher_accesses.teacher_id" // 教师姓名
 	selectSql := "teacher_accesses.*, teachers.name as teacher_name"
-	db = db.Debug().Select(selectSql).Joins(leftJoinSql1)
+	db = db.Debug().Select(selectSql).Joins(leftJoinSql1).Order("time desc")
 
 	if info.TeacherName != "" {
 		db = db.Where("teachers.name LIKE ?", "%"+info.TeacherName+"%")

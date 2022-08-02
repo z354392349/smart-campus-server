@@ -4,7 +4,6 @@ import (
 	"gin-vue-admin/core"
 	"gin-vue-admin/global"
 	"gin-vue-admin/initialize"
-	"gin-vue-admin/model"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -25,8 +24,8 @@ func main() {
 	global.GVA_LOG = core.Zap()       // 初始化zap日志库
 	global.GVA_DB = initialize.Gorm() // gorm连接数据库
 	initialize.Timer()
-	global.GVA_DB.AutoMigrate(&model.CarAccess{})
-	global.GVA_DB.AutoMigrate(&model.TeacherAccess{})
+	// global.GVA_DB.AutoMigrate(&model.CarAccess{})
+	// global.GVA_DB.AutoMigrate(&model.TeacherAccess{})
 	if global.GVA_DB != nil {
 		initialize.MysqlTables(global.GVA_DB) // 初始化表
 		// 程序结束前关闭数据库链接

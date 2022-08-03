@@ -8,9 +8,9 @@ type SearchExamResultParams struct {
 	PageInfo
 }
 
-//设置程序备注
+//设置成绩备注
 type SetExamResultParams struct {
 	ID          uint   `json:"ID" form:"ID"`
-	Result      int    `json:"result" form:"result"`
+	Result      int    `json:"result" form:"result" `
 	Description string `json:"description" form:"description"`
 }

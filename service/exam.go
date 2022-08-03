@@ -22,9 +22,12 @@ func CreateExam(exam model.Exam) (err error) {
 	global.GVA_DB.Transaction(func(db *gorm.DB) error {
 
 		if !errors.Is(global.GVA_DB.Where("name = ? ", exam.Name).First(&model.Exam{}).Error, gorm.ErrRecordNotFound) {
-			return errors.New("存在相同考试")
+			fmt.Println("存在")
+			err = errors.New("存在相同考试")
+			return err
 		}
 
+		fmt.Println("执行")
 		// 1.查询有年级有多少学生，
 		// 2.每个学生分别对应发布的科目，
 		// 3.整理出数据，插入 ExamResult

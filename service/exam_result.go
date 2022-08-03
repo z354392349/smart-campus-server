@@ -6,6 +6,8 @@ import (
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
+
+	"github.com/fatih/structs"
 )
 
 // @Author: 张佳伟
@@ -61,6 +63,8 @@ func GetExamResultList(info request.SearchExamResultParams) (err error, list int
 // @Date:2022/07/28 17:37:05
 
 func UpExamResult(info request.SetExamResultParams) (err error) {
-	err = global.GVA_DB.Where("id = ?", info.ID).Updates(&model.ExamResult{Description: info.Description, Result: info.Result}).Error
+	infoMap := structs.Map(info)
+	// err = global.GVA_DB.Where("id = ?", info.ID).Updates(&model.ExamResult{Description: info.Description, Result: *info.Result}).Error
+	err = global.GVA_DB.Model(&model.ExamResult{}).Where("id = ?", info.ID).Updates(infoMap).Error
 	return err
 }

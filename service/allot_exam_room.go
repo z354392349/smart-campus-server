@@ -26,10 +26,14 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 	if info.Name != "" {
 		db = db.Where("students.name LIKE ?", "%"+info.Name+"%")
 	}
+	if info.ExamID != 0 {
+		db = db.Where("allot_exam_rooms.exam_id = ?", info.ExamID)
+	}
 
 	if info.GradeID != 0 {
 		db = db.Where("grades.id = ?", info.GradeID)
 	}
+
 	if info.ClassID != 0 {
 		db = db.Where("classes.id = ?", info.ClassID)
 	}

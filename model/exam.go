@@ -4,9 +4,6 @@ import (
 	"gin-vue-admin/global"
 )
 
-// TODO:
-// 这个前台 需要增加详情
-
 type Exam struct {
 	global.GVA_MODEL
 	Name     string     `json:"name" form:"name" gorm:"comment:考试名称名称"`

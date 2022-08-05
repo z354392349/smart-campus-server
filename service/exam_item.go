@@ -109,7 +109,7 @@ func AllotExamItemRoom(info request.AllotExamRoomItem) (err error) {
 	ExamRoomI = 0 // 当前使用的考场数组下标
 	fmt.Println(ExamRoomI)
 
-	err = global.GVA_DB.Create(&allotExamRoomList).Error
+	err = global.GVA_DB.Omit("StudentName").Create(&allotExamRoomList).Error
 	return err
 }
 

@@ -5,6 +5,7 @@ package request
 type SearchAllotExamRoomParams struct {
 	ClassID uint   `json:"classID" form:"classID"`
 	GradeID uint   `json:"gradeID" form:"gradeID"`
+	ExamID  uint   `json:"examID" form:"examID"`
 	Name    string `json:"name" form:"name"`
 	PageInfo
 }

@@ -4,6 +4,6 @@ package response
 type GetDashboardCensusNum struct {
 	PeopleAccess  int64       `json:"peopleAccess"`
 	CarAccess     int64       `json:"carAccess"`
-	TeacherCensus interface{} `json:"TeacherCensus"`
+	TeacherCensus interface{} `json:"teacherCensus"`
 	StudentCensus interface{} `json:"studentCensus"`
 }

@@ -9,16 +9,26 @@ import (
 // 教师考勤
 type teacherCensus struct {
 	Attend int64 `json:"attend" `
-	Num    int64 `json:"num" form:"peopleAccess"`
+	Num    int64 `json:"num"  `
 }
 
 // 学生考勤
 type studentCensus struct {
 	Attend int64 `json:"attend" `
-	Num    int64 `json:"num" form:"peopleAccess"`
+	Num    int64 `json:"num"  `
 }
 
-// 车辆通行，人员通行，教师考勤，学生考勤
+// 学生考勤
+type TeacherNum struct {
+	Sex string `json:"sex" `
+	Num int64  `json:"num" `
+}
+
+// @Author: 张佳伟
+// @Function:GetDashboardCensusNum
+// @Description: 获取通行数量，考勤
+// @Router:/dashboard/getDashboardCensusNum
+// @Date:2022/08/08 21:02:59
 
 func GetDashboardCensusNum() (err error, carAccess int64, peopleAccess int64, teacherCensus teacherCensus, studentCensus studentCensus) {
 
@@ -62,4 +72,20 @@ func GetDashboardCensusNum() (err error, carAccess int64, peopleAccess int64, te
 	}
 
 	return err, carAccess, peopleAccess, teacherCensus, studentCensus
+}
+
+// @Author: 张佳伟
+// @Function:GetTeacherNum
+// @Description:获取教师数量区分男女
+// @Router:/dashboard/getTeacherNum
+// @Date:2022/08/08 21:20:46
+
+func GetTeacherNum() (err error, list interface{}) {
+	var teacherNum []TeacherNum
+	if err = global.GVA_DB.Model(&model.Teacher{}).Select("sex, count(1) as num ").Group("sex").Find(&teacherNum).Error; err != nil {
+		err = errors.New("获取教师性别统计数量失败")
+		return
+	}
+
+	return err, teacherNum
 }

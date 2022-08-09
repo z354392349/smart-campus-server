@@ -4,25 +4,8 @@ import (
 	"errors"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
+	"gin-vue-admin/model/response"
 )
-
-// 教师考勤
-type teacherCensus struct {
-	Attend int64 `json:"attend" `
-	Num    int64 `json:"num"  `
-}
-
-// 学生考勤
-type studentCensus struct {
-	Attend int64 `json:"attend" `
-	Num    int64 `json:"num"  `
-}
-
-// 学生考勤
-type TeacherNum struct {
-	Sex string `json:"sex" `
-	Num int64  `json:"num" `
-}
 
 // @Author: 张佳伟
 // @Function:GetDashboardCensusNum
@@ -30,7 +13,7 @@ type TeacherNum struct {
 // @Router:/dashboard/getDashboardCensusNum
 // @Date:2022/08/08 21:02:59
 
-func GetDashboardCensusNum() (err error, carAccess int64, peopleAccess int64, teacherCensus teacherCensus, studentCensus studentCensus) {
+func GetDashboardCensusNum() (err error, carAccess int64, peopleAccess int64, teacherCensus response.TeacherCensus, studentCensus response.StudentCensus) {
 
 	// 获取当日车辆通行数量
 	if err = global.GVA_DB.Model(&model.CarAccess{}).Where("time >=  ? and time <= ? ", 1667318400, 1667404799).Count(&carAccess).Error; err != nil {
@@ -81,11 +64,70 @@ func GetDashboardCensusNum() (err error, carAccess int64, peopleAccess int64, te
 // @Date:2022/08/08 21:20:46
 
 func GetTeacherNum() (err error, list interface{}) {
-	var teacherNum []TeacherNum
+	var teacherNum []response.TeacherNum
 	if err = global.GVA_DB.Model(&model.Teacher{}).Select("sex, count(1) as num ").Group("sex").Find(&teacherNum).Error; err != nil {
 		err = errors.New("获取教师性别统计数量失败")
 		return
 	}
 
 	return err, teacherNum
+}
+
+// @Author: 张佳伟
+// @Function:GetTeacherAttendCensus
+// @Description:获取教师考勤率，准点率
+// @Router /dashboard/getTeacherNum
+// @Date:2022/08/09 17:55:29
+
+func GetTeacherAttendCensus() (err error, list interface{}) {
+	sql := "select time, count(*) as 	attend from  (select time, teacher_id from (select  left(FROM_UNIXTIME(time),10) as time, teacher_id  from teacher_accesses union all select left(FROM_UNIXTIME(time),10) as time, teacher_id   from  car_accesses) tb2 group by  tb2.time, tb2.teacher_id) tn group by tn.time"
+	var teacherAttendCensus []response.TeacherAttendCensus
+	if err = global.GVA_DB.Raw(sql).Find(&teacherAttendCensus).Error; err != nil {
+		err = errors.New("获取教师考勤统计数量失败")
+		return
+	}
+
+	//  获取教师总数
+	var teacherTotal int64
+	if err = global.GVA_DB.Model(&model.Teacher{}).Count(&teacherTotal).Error; err != nil {
+		err = errors.New("获取教师考勤统计数量失败")
+		return
+	}
+
+	//
+
+	return err, teacherAttendCensus
+}
+
+// @Author: 张佳伟
+// @Function: GetExamPassRate
+// @Description: 合格率
+// @Router: /dashboard/getExamPassRate
+// @Date:2022/08/09 10:06:35
+
+func GetExamPassRate() (err error, list interface{}) {
+
+	selectSql := "grades.name as grade_name, count(*) as total"
+	leftJoinSql1 := "left join exams on exams.id = exam_results.exam_id"
+	leftJoinSql2 := "left join students on students.id  =  exam_results.student_id"
+	leftJoinSql3 := "left join  grades  on  grades.id =students.grade_id"
+	whereSql := "exams.grade_id = students.grade_id"
+	var examPass []response.ExamPassRate
+	if err = global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql).Group("students.grade_id").Find(&examPass).Error; err != nil {
+		err = errors.New("获取学生参加考试的总数")
+		return
+	}
+
+	whereSql += " and exam_results.result >= 60 "
+	selectSql = "count(*) as rate"
+	var examRate []response.ExamPassRate
+	if err = global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql).Group("students.grade_id").Find(&examRate).Error; err != nil {
+		err = errors.New("获取学生参加考试通过的数量")
+		return
+	}
+
+	for i, _ := range examPass {
+		examPass[i].Rate = examRate[i].Rate
+	}
+	return err, examPass
 }

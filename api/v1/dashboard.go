@@ -38,10 +38,40 @@ func GetDashboardCensusNum(c *gin.Context) {
 
 func GetTeacherNum(c *gin.Context) {
 
-	if err, Teacherlist := service.GetTeacherNum(); err != nil {
+	if err, teacherlist := service.GetTeacherNum(); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithDetailed(Teacherlist, "获取成功", c)
+		response.OkWithDetailed(teacherlist, "获取成功", c)
+	}
+}
+
+// @Author: 张佳伟
+// @Function:GetTeacherAttendCensus
+// @Description:获取教师考勤率，准点率
+// @Router /dashboard/getTeacherNum
+// @Date:2022/08/09 17:55:29
+
+func GetTeacherAttendCensus(c *gin.Context) {
+	if err, teacherlist := service.GetTeacherAttendCensus(); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(teacherlist, "获取成功", c)
+	}
+}
+
+// @Author: 张佳伟
+// @Function: GetExamPassRate
+// @Description: 合格率
+// @Router: /dashboard/getExamPassRate
+// @Date:2022/08/09 10:06:35
+
+func GetExamPassRate(c *gin.Context) {
+	if err, examPassRate := service.GetExamPassRate(); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(examPassRate, "获取成功", c)
 	}
 }

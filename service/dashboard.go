@@ -107,8 +107,8 @@ func GetTeacherAttendCensus() (err error, list interface{}) {
 	}
 
 	for i, _ := range teacherAttendCensus {
-		teacherAttendCensus[i].Attend = utils.NumToFixed(teacherAttendCensus[i].Attend, float64(teacherTotal), "2")
-		teacherAttendCensus[i].OnTime = utils.NumToFixed(teacherOnTimeCensus[i].OnTime, float64(teacherTotal), "2")
+		teacherAttendCensus[i].Attend = utils.NumToFixed(teacherAttendCensus[i].Attend, float64(teacherTotal), "4") * 100
+		teacherAttendCensus[i].OnTime = utils.NumToFixed(teacherOnTimeCensus[i].OnTime, float64(teacherTotal), "4") * 100
 	}
 
 	return err, teacherAttendCensus

@@ -5,6 +5,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/response"
+	"gin-vue-admin/utils"
 )
 
 // @Author: 张佳伟
@@ -97,12 +98,17 @@ func GetTeacherAttendCensus() (err error, list interface{}) {
 	}
 
 	// 获取考勤率准点率
-	// TODO: 未开始
-	sql = "select time, count(*) as 	attend from  (select time, teacher_id from (select  left(FROM_UNIXTIME(time),10) as time, teacher_id  from teacher_accesses union all select left(FROM_UNIXTIME(time),10) as time, teacher_id   from  car_accesses) tb2 group by  tb2.time, tb2.teacher_id) tn group by tn.time"
+
+	sql = `select left (FROM_UNIXTIME(time),10) as time, count(*) as on_time from (select time, teacher_id from ( select time, teacher_id, direction from teacher_accesses union all select time, teacher_id, direction from car_accesses) tb2 where right (FROM_UNIXTIME(tb2.time), 8) <= "09:00:00" and tb2.direction = 1 group by left(FROM_UNIXTIME(tb2.time), 10), tb2.teacher_id) tn group by left(FROM_UNIXTIME(tn.time), 10)`
 	var teacherOnTimeCensus []response.TeacherAttendCensus
 	if err = global.GVA_DB.Raw(sql).Find(&teacherOnTimeCensus).Error; err != nil {
-		err = errors.New("获取教师考勤统计数量失败")
+		err = errors.New("获取教师准点统计数量失败")
 		return
+	}
+
+	for i, _ := range teacherAttendCensus {
+		teacherAttendCensus[i].Attend = utils.NumToFixed(teacherAttendCensus[i].Attend, float64(teacherTotal), "2")
+		teacherAttendCensus[i].OnTime = utils.NumToFixed(teacherOnTimeCensus[i].OnTime, float64(teacherTotal), "2")
 	}
 
 	return err, teacherAttendCensus

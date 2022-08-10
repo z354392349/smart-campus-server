@@ -35,7 +35,7 @@ type ExamPassRate struct {
 
 // 教师考勤 - 历史
 type TeacherAttendCensus struct {
-	Time   string `json:"time" `   // 时间
-	Attend int64  `json:"attend" ` // 出席率
-	OnTime int64  `json:"onTime"`  // 准时率
+	Time   string  `json:"time" `   // 时间
+	Attend float64 `json:"attend" ` // 出席率
+	OnTime float64 `json:"onTime"`  // 准时率
 }

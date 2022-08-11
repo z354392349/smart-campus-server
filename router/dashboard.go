@@ -15,7 +15,7 @@ func InitDashboardRouter(Router *gin.RouterGroup) {
 		Dashboard.GET("getExamPassRate", v1.GetExamPassRate)               // 年级合格率
 		Dashboard.GET("getTeacherAttendCensus", v1.GetTeacherAttendCensus) // 获取教师考勤率，准点率
 		Dashboard.GET("getStudentNum", v1.GetStudentNum)                   // 获取学生数量
-		// Dashboard.POST("createCourse", v1.CreateCourse)   // 新增课程信息
+		Dashboard.GET("getStudentAttendCensus", v1.GetStudentAttendCensus) // 获取学生考勤数量
 		// Dashboard.PUT("upCourse", v1.UpCourse)            // 更新课程
 		// Dashboard.DELETE("deleteCourse", v1.DeleteCourse) // 删除课程
 	}

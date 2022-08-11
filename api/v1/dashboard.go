@@ -90,3 +90,18 @@ func GetStudentNum(c *gin.Context) {
 		response.OkWithDetailed(examPassRate, "获取成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function:GetTeacherAttendCensus
+// @Description:获取教师考勤率，准点率
+// @Router /dashboard/getStudentAttendCensus
+// @Date:2022/08/09 17:55:29
+
+func GetStudentAttendCensus(c *gin.Context) {
+	if err, teacherlist := service.GetStudentAttendCensus(); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(teacherlist, "获取成功", c)
+	}
+}

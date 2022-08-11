@@ -91,7 +91,7 @@ func GetTeacherAttendCensus() (err error, list interface{}) {
 
 	// 获取考勤率
 	sql := "select time, count(*) as 	attend from  (select time, teacher_id from (select  left(FROM_UNIXTIME(time),10) as time, teacher_id  from teacher_accesses union all select left(FROM_UNIXTIME(time),10) as time, teacher_id   from  car_accesses) tb2 group by  tb2.time, tb2.teacher_id) tn group by tn.time"
-	var teacherAttendCensus []response.TeacherAttendCensus
+	var teacherAttendCensus []response.AttendCensus
 	if err = global.GVA_DB.Raw(sql).Find(&teacherAttendCensus).Error; err != nil {
 		err = errors.New("获取教师考勤统计数量失败")
 		return
@@ -100,7 +100,7 @@ func GetTeacherAttendCensus() (err error, list interface{}) {
 	// 获取考勤率准点率
 
 	sql = `select left (FROM_UNIXTIME(time),10) as time, count(*) as on_time from (select time, teacher_id from ( select time, teacher_id, direction from teacher_accesses union all select time, teacher_id, direction from car_accesses) tb2 where right (FROM_UNIXTIME(tb2.time), 8) <= "09:00:00" and tb2.direction = 1 group by left(FROM_UNIXTIME(tb2.time), 10), tb2.teacher_id) tn group by left(FROM_UNIXTIME(tn.time), 10)`
-	var teacherOnTimeCensus []response.TeacherAttendCensus
+	var teacherOnTimeCensus []response.AttendCensus
 	if err = global.GVA_DB.Raw(sql).Find(&teacherOnTimeCensus).Error; err != nil {
 		err = errors.New("获取教师准点统计数量失败")
 		return
@@ -156,7 +156,7 @@ func GetExamPassRate() (err error, list interface{}) {
 func GetStudentNum() (err error, list interface{}) {
 
 	// select count(*) as total, grades.name , classes.name from students left join grades on grades.id = students.grade_id left join classes on classes.id = students.class_id group by sex, class_id
-	selectSql := " count(*) as total, grades.name as grade_name , classes.name  class_name"
+	selectSql := " count(*) as total, grades.name as grade_name , classes.name  class_name, sex"
 	leftJoinSql1 := "left join grades on grades.id = students.grade_id"
 	leftJoinSql2 := "left join classes on classes.id = students.class_id"
 	var studentNum []response.StudentNum
@@ -166,4 +166,43 @@ func GetStudentNum() (err error, list interface{}) {
 	}
 
 	return err, studentNum
+}
+
+// @Author: 张佳伟
+// @Function:GetTeacherAttendCensus
+// @Description:获取教师考勤率，准点率
+// @Router /dashboard/getStudentAttendCensus
+// @Date:2022/08/09 17:55:29
+
+func GetStudentAttendCensus() (err error, list interface{}) {
+
+	//  获取学生总数
+	var teacherTotal int64
+	if err = global.GVA_DB.Model(&model.Student{}).Count(&teacherTotal).Error; err != nil {
+		err = errors.New("获取教师总数失败")
+		return
+	}
+
+	// 获取考勤率
+	sql := "select left(FROM_UNIXTIME(time), 10) as time, count(*) as attend from ( select * from student_accesses group by left(FROM_UNIXTIME(time), 10), student_id ) tb group by left(FROM_UNIXTIME(time), 10)"
+	var studentAttendCensus []response.AttendCensus
+	if err = global.GVA_DB.Raw(sql).Find(&studentAttendCensus).Error; err != nil {
+		err = errors.New("获取学生考勤统计数量失败")
+		return
+	}
+
+	// 获取考勤率准点率
+	sql = ` select left(FROM_UNIXTIME(time), 10) as time , count(*) as on_time from ( select * from student_accesses where right (FROM_UNIXTIME(time), 8) <= "09:00:00" and student_accesses.direction = 1 group by left(FROM_UNIXTIME(time), 10), student_id ) tb group by left(FROM_UNIXTIME(time), 10)`
+	var teacherOnTimeCensus []response.AttendCensus
+	if err = global.GVA_DB.Raw(sql).Find(&teacherOnTimeCensus).Error; err != nil {
+		err = errors.New("获取学生准点统计数量失败")
+		return
+	}
+
+	for i, _ := range studentAttendCensus {
+		studentAttendCensus[i].Attend = utils.NumToFixed(studentAttendCensus[i].Attend, float64(teacherTotal), "4") * 100
+		studentAttendCensus[i].OnTime = utils.NumToFixed(teacherOnTimeCensus[i].OnTime, float64(teacherTotal), "4") * 100
+	}
+
+	return err, studentAttendCensus
 }

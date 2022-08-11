@@ -33,8 +33,8 @@ type ExamPassRate struct {
 	Rate      int64  `json:"rate"`
 }
 
-// 教师考勤 - 历史
-type TeacherAttendCensus struct {
+// 教师，学生考勤 - 历史
+type AttendCensus struct {
 	Time   string  `json:"time" `   // 时间
 	Attend float64 `json:"attend" ` // 出席率
 	OnTime float64 `json:"onTime"`  // 准时率
@@ -43,8 +43,8 @@ type TeacherAttendCensus struct {
 // GetStudentNum
 // 教师考勤 - 历史
 type StudentNum struct {
-	ClassName string  `json:"className" ` // 班级名称
-	GradeName float64 `json:"gradeName" ` // 年级名称
-	Sex       string  `json:"sex"`        // 性别
-	Total     int64   `json:"total"`      // 数量
+	ClassName string `json:"className" ` // 班级名称
+	GradeName string `json:"gradeName" ` // 年级名称
+	Sex       string `json:"sex"`        // 性别
+	Total     int64  `json:"total"`      // 数量
 }

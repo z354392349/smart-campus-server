@@ -146,3 +146,24 @@ func GetExamPassRate() (err error, list interface{}) {
 	}
 	return err, examPass
 }
+
+// @Author: 张佳伟
+// @Function: GetStudentNum
+// @Description: 获取学生数量
+// @Router:/dashboard/getStudentNum
+// @Date:2022/08/11 17:22:00
+
+func GetStudentNum() (err error, list interface{}) {
+
+	// select count(*) as total, grades.name , classes.name from students left join grades on grades.id = students.grade_id left join classes on classes.id = students.class_id group by sex, class_id
+	selectSql := " count(*) as total, grades.name as grade_name , classes.name  class_name"
+	leftJoinSql1 := "left join grades on grades.id = students.grade_id"
+	leftJoinSql2 := "left join classes on classes.id = students.class_id"
+	var studentNum []response.StudentNum
+	if err = global.GVA_DB.Model(&model.Student{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Group("sex, class_id").Find(&studentNum).Error; err != nil {
+		err = errors.New("获取学生人数")
+		return
+	}
+
+	return err, studentNum
+}

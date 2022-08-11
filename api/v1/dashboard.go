@@ -75,3 +75,18 @@ func GetExamPassRate(c *gin.Context) {
 		response.OkWithDetailed(examPassRate, "获取成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function: GetStudentNum
+// @Description: 获取学生数量
+// @Router:/dashboard/getStudentNum
+// @Date:2022/08/11 17:22:00
+
+func GetStudentNum(c *gin.Context) {
+	if err, examPassRate := service.GetStudentNum(); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(examPassRate, "获取成功", c)
+	}
+}

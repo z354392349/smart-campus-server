@@ -39,3 +39,12 @@ type TeacherAttendCensus struct {
 	Attend float64 `json:"attend" ` // 出席率
 	OnTime float64 `json:"onTime"`  // 准时率
 }
+
+// GetStudentNum
+// 教师考勤 - 历史
+type StudentNum struct {
+	ClassName string  `json:"className" ` // 班级名称
+	GradeName float64 `json:"gradeName" ` // 年级名称
+	Sex       string  `json:"sex"`        // 性别
+	Total     int64   `json:"total"`      // 数量
+}

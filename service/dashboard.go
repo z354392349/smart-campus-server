@@ -124,8 +124,8 @@ func GetExamPassRate() (err error, list interface{}) {
 
 	selectSql := "grades.name as grade_name, count(*) as total"
 	leftJoinSql1 := "left join exams on exams.id = exam_results.exam_id"
-	leftJoinSql2 := "left join students on students.id  =  exam_results.student_id"
-	leftJoinSql3 := "left join  grades  on  grades.id =students.grade_id"
+	leftJoinSql2 := "left join students on students.id = exam_results.student_id"
+	leftJoinSql3 := "left join  grades  on  grades.id = students.grade_id"
 	whereSql := "exams.grade_id = students.grade_id"
 	var examPass []response.ExamPassRate
 	if err = global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql).Group("students.grade_id").Find(&examPass).Error; err != nil {

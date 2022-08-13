@@ -9,14 +9,6 @@ import (
 	"gin-vue-admin/utils"
 )
 
-// type classStudentNum struct {
-// 	ExamID    uint  `json:"examID" form:"examID" gorm:"comment:考试ID;"`
-// 	Result    *int  `json:"result" form:"result"`
-// 	CourseID  uint  `json:"courseID" form:"courseID" gorm:"comment:科目ID;" `
-// 	StudentID uint  `json:"studentID" form:"studentID" gorm:"comment:学生ID;" `
-// 	Num       int64 `json:"num"`
-// }
-
 func GetDashboardCensusNum1() (err error, carAccess int64, peopleAccess int64, teacherCensus response.TeacherCensus, studentCensus response.StudentCensus) {
 
 	// 获取当日车辆通行数量
@@ -125,7 +117,7 @@ func GetStudentAttendCensus1() (err error, list interface{}) {
 // @Router:/gradeResultAnalyse/getGradeAverageResult
 // @Date:2022/08/08 21:02:59
 
-func GetGradeAverageResult(info request.GradeAverageResult) (err error, list interface{}) {
+func GetGradeAverageResult(info request.GradeResultAnalyse) (err error, list interface{}) {
 
 	// 获取最后一次考试
 	var lastExam model.Exam
@@ -174,7 +166,7 @@ func GetGradeAverageResult(info request.GradeAverageResult) (err error, list int
 // @Router:/gradeResultAnalyse/GetGradePassPercent
 // @Date:2022/08/12 15:40:40
 
-func GetGradePassPercent(info request.GradePassPercent) (err error, percent interface{}) {
+func GetGradePassPercent(info request.GradeResultAnalyse) (err error, percent interface{}) {
 
 	// 获取最后一次考试
 	var lastExam model.Exam
@@ -200,4 +192,54 @@ func GetGradePassPercent(info request.GradePassPercent) (err error, percent inte
 	percent = utils.NumToFixed(pasStudentNum, attendStudentNum, "4") * 100
 
 	return err, percent
+}
+
+// @Author: 张佳伟
+// @Function:GetGradeAverageResultHistory
+// @Description: 获取年级
+// @Router:/gradeResultAnalyse/GetGradeAverageResultHistory
+// @Date:2022/08/13 17:13:08
+
+func GetGradeAverageResultHistory(info request.GradeResultAnalyse) (err error, list interface{}) {
+
+	// 参加这次考试的学生数
+	selectSql := " exams.name as  exam_name, classes.name as class_name, FORMAT(sum(`result`) / COUNT(distinct students.id), 2) as result"
+	leftJoinSql1 := "left join students on students.id = exam_results.student_id"
+	leftJoinSql3 := "left join classes on classes.id = students.class_id "
+	leftJoinSql2 := "left join exams on exams.id = exam_results.exam_id"
+
+	var gradeAverageResultHistory []response.GradeAverageResultHistory
+	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where("students.grade_id = ? and exams.grade_id = students.grade_id", info.GradeID).Group("exam_id, class_id").Order("exams.id")
+
+	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
+		err = errors.New("参加这次考试的学生数")
+		return
+	}
+
+	return err, gradeAverageResultHistory
+}
+
+// @Author: 张佳伟
+// @Function:GetGradeCourseAverageResultHistory
+// @Description: 获取年级科目平均成绩
+// @Router:/gradeResultAnalyse/GetGradeCourseAverageResultHistory
+// @Date:2022/08/13 17:13:08
+
+func GetGradeCourseAverageResultHistory(info request.GradeResultAnalyse) (err error, list interface{}) {
+
+	// 参加这次考试的学生数
+	selectSql := " exams.name as  exam_name, classes.name as class_name, FORMAT(sum(`result`) / COUNT(distinct students.id), 2) as result"
+	leftJoinSql1 := "left join students on students.id = exam_results.student_id"
+	leftJoinSql3 := "left join classes on classes.id = students.class_id "
+	leftJoinSql2 := "left join exams on exams.id = exam_results.exam_id"
+	whereSql1 := "students.grade_id = ? and exams.grade_id = students.grade_id and exam_results.course_id = ?"
+	var gradeAverageResultHistory []response.GradeAverageResultHistory
+	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql1, info.GradeID, info.CourseID).Group("exam_id, class_id, course_id").Order("exams.id")
+
+	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
+		err = errors.New("参加这次考试的学生数")
+		return
+	}
+
+	return err, gradeAverageResultHistory
 }

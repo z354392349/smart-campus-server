@@ -144,7 +144,7 @@ func GetGradeAverageResult(info request.GradeResultAnalyse) (err error, list int
 		db = db.Where("students.grade_id = ?", info.GradeID)
 	}
 	if info.CourseID != 0 {
-		db = db.Where("exam_results.course_id  = ?", info.GradeID)
+		db = db.Where("exam_results.course_id  = ?", info.CourseID)
 	}
 
 	db.Find(&averageResult)

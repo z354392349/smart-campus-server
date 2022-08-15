@@ -46,7 +46,7 @@ func GetGradePassPercent(c *gin.Context) {
 
 // @Author: 张佳伟
 // @Function:GetGradeAverageResultHistory
-// @Description: 获取年级
+// @Description: 获取年级平均成绩失败
 // @Router:/gradeResultAnalyse/GetGradeAverageResultHistory
 // @Date:2022/08/13 17:13:08
 

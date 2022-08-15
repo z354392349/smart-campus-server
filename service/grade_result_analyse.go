@@ -94,7 +94,7 @@ func GetGradePassPercent(info request.GradeResultAnalyse) (err error, percent in
 
 // @Author: 张佳伟
 // @Function:GetGradeAverageResultHistory
-// @Description: 获取年级
+// @Description: 获取年级平均成绩
 // @Router:/gradeResultAnalyse/GetGradeAverageResultHistory
 // @Date:2022/08/13 17:13:08
 
@@ -110,7 +110,7 @@ func GetGradeAverageResultHistory(info request.GradeResultAnalyse) (err error, l
 	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where("students.grade_id = ? and exams.grade_id = students.grade_id", info.GradeID).Group("exam_id, class_id").Order("exams.id")
 
 	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
-		err = errors.New("参加这次考试的学生数")
+		err = errors.New("获取年级平均成绩失败")
 		return
 	}
 
@@ -135,7 +135,7 @@ func GetGradeCourseAverageResultHistory(info request.GradeResultAnalyse) (err er
 	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql1, info.GradeID, info.CourseID).Group("exam_id, class_id, course_id").Order("exams.id")
 
 	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
-		err = errors.New("参加这次考试的学生数")
+		err = errors.New("获取年级科目平均成绩失败")
 		return
 	}
 

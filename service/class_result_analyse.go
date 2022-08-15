@@ -45,7 +45,13 @@ func GetStudentTotalResult(info request.ClassResultAnalyse) (err error, list int
 	return err, studentTotalResult
 }
 
-func GetGradePassPercent1(info request.GradeResultAnalyse) (err error, percent interface{}) {
+// @Author: 张佳伟
+// @Function:GetClassPassPercent
+// @Description: 获取指定班级的通过率
+// @Router:/studentResultAnalyse/getClassPassPercent
+// @Date:2022/08/15 09:16:41
+
+func GetClassPassPercent(info request.ClassResultAnalyse) (err error, percent interface{}) {
 
 	// 获取最后一次考试
 	var lastExam model.Exam
@@ -56,15 +62,16 @@ func GetGradePassPercent1(info request.GradeResultAnalyse) (err error, percent i
 
 	// 参加这次考试的学生数
 	var attendStudentNum float64
-	if err = global.GVA_DB.Debug().Model(&model.ExamResult{}).Select("count(*) as total").Where("exam_results.exam_id  = ?", lastExam.ID).Find(&attendStudentNum).Error; err != nil {
+	leftJoinSql1 := "left join students on students.id = exam_results.student_id"
+	if err = global.GVA_DB.Debug().Model(&model.ExamResult{}).Select("count(*) as total").Joins(leftJoinSql1).Where("exam_results.exam_id  = ? and students.class_id = ? ", lastExam.ID, info.ClassID).Find(&attendStudentNum).Error; err != nil {
 		err = errors.New("参加这次考试的学生数")
 		return
 	}
 
 	// 通过这次考试的学生数
 	var pasStudentNum float64
-	if err = global.GVA_DB.Debug().Model(&model.ExamResult{}).Select("count(*) as total").Where("exam_results.exam_id  = ? AND result >= ?", lastExam.ID, 60).Find(&pasStudentNum).Error; err != nil {
-		err = errors.New("参加这次考试的学生数")
+	if err = global.GVA_DB.Debug().Model(&model.ExamResult{}).Select("count(*) as total").Joins(leftJoinSql1).Where("exam_results.exam_id  = ?  and students.class_id = ? and result >= ?", lastExam.ID, info.ClassID, 60).Find(&pasStudentNum).Error; err != nil {
+		err = errors.New("参加这次考试通过的学生数")
 		return
 	}
 
@@ -73,38 +80,48 @@ func GetGradePassPercent1(info request.GradeResultAnalyse) (err error, percent i
 	return err, percent
 }
 
-func GetGradeAverageResultHistory1(info request.GradeResultAnalyse) (err error, list interface{}) {
+// @Author: 张佳伟
+// @Function:GetStudentToTalResultHistory
+// @Description:获取班级下每一个学生，历史考试总成绩成绩
+// @Router:/studentResultAnalyse/getStudentToTalResultListHistory
+// @Date:2022/08/15 09:52:31
 
-	// 参加这次考试的学生数
-	selectSql := " exams.name as  exam_name, classes.name as class_name, FORMAT(sum(`result`) / COUNT(distinct students.id), 2) as result"
+func GetStudentToTalResultHistory(info request.ClassResultAnalyse) (err error, list interface{}) {
+
+	selectSql := "exams.name as exam_name, students.name as student_name, students.id as student_id ,sum(`result`) as result"
 	leftJoinSql1 := "left join students on students.id = exam_results.student_id"
 	leftJoinSql3 := "left join classes on classes.id = students.class_id "
 	leftJoinSql2 := "left join exams on exams.id = exam_results.exam_id"
-
-	var gradeAverageResultHistory []response.GradeAverageResultHistory
-	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where("students.grade_id = ? and exams.grade_id = students.grade_id", info.GradeID).Group("exam_id, class_id").Order("exams.id")
+	whereSql1 := "exams.grade_id = students.grade_id and students.class_id = ?"
+	var gradeAverageResultHistory []response.StudentTotalResultHistory
+	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql1, info.ClassID).Group("exam_id, class_id, students.id ").Order("exams.name,	student_id ")
 
 	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
-		err = errors.New("参加这次考试的学生数")
+		err = errors.New("获取班级学生历史考试总成绩失败")
 		return
 	}
 
 	return err, gradeAverageResultHistory
 }
 
-func GetGradeCourseAverageResultHistory1(info request.GradeResultAnalyse) (err error, list interface{}) {
+// @Author: 张佳伟
+// @Function:GetStudentCourseResultHistory1
+// @Description:获取班级下每一个学生，历史考试总成绩成绩
+// @Router:/studentResultAnalyse/getStudentCourseResultHistory1
+// @Date:2022/08/15 09:52:31
 
-	// 参加这次考试的学生数
-	selectSql := " exams.name as  exam_name, classes.name as class_name, FORMAT(sum(`result`) / COUNT(distinct students.id), 2) as result"
+func GetStudentCourseResultHistory(info request.ClassResultAnalyse) (err error, list interface{}) {
+
+	selectSql := "exams.name as exam_name, students.name as student_name, students.id as student_id ,sum(`result`) as result"
 	leftJoinSql1 := "left join students on students.id = exam_results.student_id"
 	leftJoinSql3 := "left join classes on classes.id = students.class_id "
 	leftJoinSql2 := "left join exams on exams.id = exam_results.exam_id"
-	whereSql1 := "students.grade_id = ? and exams.grade_id = students.grade_id and exam_results.course_id = ?"
-	var gradeAverageResultHistory []response.GradeAverageResultHistory
-	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql1, info.GradeID, info.CourseID).Group("exam_id, class_id, course_id").Order("exams.id")
+	whereSql1 := "exams.grade_id = students.grade_id and students.class_id = ? and exam_results.course_id = ?"
+	var gradeAverageResultHistory []response.StudentTotalResultHistory
+	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Where(whereSql1, info.ClassID, info.GradeID).Group("exam_id, class_id, students.id ").Order("exams.name,	student_id ")
 
 	if err = db.Find(&gradeAverageResultHistory).Error; err != nil {
-		err = errors.New("参加这次考试的学生数")
+		err = errors.New("获取班级学生历史考试单科成绩失败")
 		return
 	}
 

@@ -11,15 +11,15 @@ import (
 )
 
 // @Author: 张佳伟
-// @Function:GetStudentTotalResult
+// @Function:GetClassTotalResult
 // @Description: 获取班级下每个学生总成绩
-// @Router:/studentResultAnalyse/getStudentTotalResult
+// @Router:/classResultAnalyse/getClassTotalResult
 // @Date:2022/08/14 18:05:44
 
-func GetStudentTotalResult(c *gin.Context) {
+func GetClassTotalResult(c *gin.Context) {
 	var info request.ClassResultAnalyse
 	_ = c.ShouldBindQuery(&info)
-	if err, carAccess := service.GetStudentTotalResult(info); err != nil {
+	if err, carAccess := service.GetClassTotalResult(info); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
@@ -30,7 +30,7 @@ func GetStudentTotalResult(c *gin.Context) {
 // @Author: 张佳伟
 // @Function:GetClassPassPercent
 // @Description: 获取指定班级的通过率
-// @Router:/studentResultAnalyse/getClassPassPercent
+// @Router:/classResultAnalyse/getClassPassPercent
 // @Date:2022/08/15 09:16:41
 
 func GetClassPassPercent(c *gin.Context) {
@@ -45,15 +45,15 @@ func GetClassPassPercent(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function:getStudentToTalResultHistory
+// @Function:getClassToTalResultHistory
 // @Description:获取班级下每一个学生，历史考试总成绩成绩
-// @Router:/studentResultAnalyse/getStudentToTalResultHistory
+// @Router:/classResultAnalyse/getClassToTalResultHistory
 // @Date:2022/08/15 09:52:31
 
-func GetStudentToTalResultHistory(c *gin.Context) {
+func GetClassToTalResultHistory(c *gin.Context) {
 	var info request.ClassResultAnalyse
 	_ = c.ShouldBindQuery(&info)
-	if err, carAccess := service.GetStudentToTalResultHistory(info); err != nil {
+	if err, carAccess := service.GetClassToTalResultHistory(info); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
@@ -62,15 +62,15 @@ func GetStudentToTalResultHistory(c *gin.Context) {
 }
 
 // @Author: 张佳伟
-// @Function:GetStudentCourseResultHistory1
+// @Function:GetClassCourseResultHistory1
 // @Description:获取班级下每一个学生，历史考试总成绩成绩
-// @Router:/studentResultAnalyse/getStudentCourseResultHistory1
+// @Router:/classResultAnalyse/getClassCourseResultHistory1
 // @Date:2022/08/15 09:52:31
 
-func GetStudentCourseResultHistory(c *gin.Context) {
+func GetClassCourseResultHistory(c *gin.Context) {
 	var info request.ClassResultAnalyse
 	_ = c.ShouldBindQuery(&info)
-	if err, carAccess := service.GetStudentCourseResultHistory(info); err != nil {
+	if err, carAccess := service.GetClassCourseResultHistory(info); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {

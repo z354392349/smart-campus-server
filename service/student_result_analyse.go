@@ -63,13 +63,24 @@ func GetStudentTotalResultHistory(info request.StudentResultAnalyse) (err error,
 	return err, studentExamTotalResultHistory
 }
 
-//  select
-// 	exams.name as exam_name,
-// 	sum(result) as total
-// from
-// 	exam_results
-// left join exams on
-// 	exams.id = exam_results.exam_id
-// where
-// 	student_id = 4
-// 	and course_id = 1
+// @Author: 张佳伟
+// @Function:GetStudentCourseResultHistory
+// @Description:获取学生但科考试历史成绩
+// @Router:/studentResultAnalyse/getStudentCourseResultHistory
+// @Date:2022/08/17 21:23:50
+
+func GetStudentCourseResultHistory(info request.StudentResultAnalyse) (err error, list interface{}) {
+
+	selectSql := "exams.name as exam_name, result"
+	leftJoinSql1 := "left join exams on exams.id = exam_results.exam_id"
+	whereSql1 := "student_id = ? and course_id = ?"
+	var studentCourseResultHistory []response.StudentCourseResultHistory
+	db := global.GVA_DB.Model(&model.ExamResult{}).Select(selectSql).Joins(leftJoinSql1).Where(whereSql1, info.StudentID, info.CourseID).Group("exams.id").Order("exams.id")
+
+	if err = db.Find(&studentCourseResultHistory).Error; err != nil {
+		err = errors.New("获取学生每一次考试单科成绩失败")
+		return
+	}
+
+	return err, studentCourseResultHistory
+}

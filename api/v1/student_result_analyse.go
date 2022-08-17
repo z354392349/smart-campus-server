@@ -43,3 +43,20 @@ func GetStudentTotalResultHistory(c *gin.Context) {
 		response.OkWithDetailed(carAccess, "获取成功", c)
 	}
 }
+
+// @Author: 张佳伟
+// @Function:GetStudentCourseResultHistory
+// @Description:获取学生但科考试历史成绩
+// @Router:/studentResultAnalyse/getStudentCourseResultHistory
+// @Date:2022/08/17 21:23:50
+
+func GetStudentCourseResultHistory(c *gin.Context) {
+	var info request.StudentResultAnalyse
+	_ = c.ShouldBindQuery(&info)
+	if err, carAccess := service.GetStudentCourseResultHistory(info); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(carAccess, "获取成功", c)
+	}
+}

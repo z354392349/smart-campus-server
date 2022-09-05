@@ -5,6 +5,7 @@ type SearchExamResultParams struct {
 	Name    string `json:"name" form:"name"`
 	GradeID uint   `json:"gradeID" form:"gradeID"`
 	ClassID uint   `json:"classID" form:"classID"`
+	ExamID  uint   `json:"examID" form:"examID" gorm:"comment:考试ID;"`
 	PageInfo
 }
 

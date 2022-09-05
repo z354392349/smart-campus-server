@@ -14,4 +14,6 @@ type AllotExamRoom struct {
 	Address      string `json:"address" form:"address"`           // 考场地址
 	GradeName    string `json:"gradeName" form:"gradeName"`       // 年级
 	ClassName    string `json:"className" form:"className"`       // 班级
+	EndTime      int    `json:"endTime" form:"endTime"`           // 开始时间
+	StartTime    int    `json:"startTime" form:"startTime"`       // 结束时间
 }

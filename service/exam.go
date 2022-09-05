@@ -27,7 +27,6 @@ func CreateExam(exam model.Exam) (err error) {
 			return err
 		}
 
-		fmt.Println("执行")
 		// 1.查询有年级有多少学生，
 		// 2.每个学生分别对应发布的科目，
 		// 3.整理出数据，插入 ExamResult
@@ -90,7 +89,7 @@ func GetExamList(info request.SearchExamParams) (err error, list interface{}, to
 		return
 	}
 
-	if err = db.Limit(limit).Offset(offset).Preload("Grade").Find(&examList).Error; err != nil {
+	if err = db.Limit(limit).Offset(offset).Preload("Grade").Order("id desc").Find(&examList).Error; err != nil {
 		return
 	}
 

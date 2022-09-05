@@ -37,6 +37,9 @@ func GetExamResultList(info request.SearchExamResultParams) (err error, list int
 	if info.Name != "" {
 		db = db.Where("students.name LIKE ?", "%"+info.Name+"%")
 	}
+	if info.ExamID != 0 {
+		db = db.Where("exams.id = ?", info.ExamID)
+	}
 
 	if info.GradeID != 0 {
 		db = db.Where("grades.id  = ?", info.GradeID)

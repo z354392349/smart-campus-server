@@ -162,21 +162,18 @@ func ChangePassword(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /user/getUserList [post]
 func GetUserList(c *gin.Context) {
-	var pageInfo request.PageInfo
-	_ = c.ShouldBindJSON(&pageInfo)
-	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if err, list, total := service.GetUserInfoList(pageInfo); err != nil {
+	var userInfo request.UserInfo
+	_ = c.ShouldBindJSON(&userInfo)
+
+	if err, list, total := service.GetUserInfoList(userInfo); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
 			Total:    total,
-			Page:     pageInfo.Page,
-			PageSize: pageInfo.PageSize,
+			Page:     userInfo.Page,
+			PageSize: userInfo.PageSize,
 		}, "获取成功", c)
 	}
 }

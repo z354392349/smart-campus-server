@@ -59,7 +59,7 @@ func GetAPIInfoList(api model.SysApi, info request.PageInfo, order string, desc 
 	}
 
 	if api.ApiGroup != "" {
-		db = db.Where("api_group = ?", api.ApiGroup)
+		db = db.Where("api_group LIKE ?", "%"+api.ApiGroup+"%")
 	}
 
 	err = db.Count(&total).Error

@@ -31,3 +31,9 @@ type SetUserAuth struct {
 	UUID        uuid.UUID `json:"uuid"`        // 用户UUID
 	AuthorityId string    `json:"authorityId"` // 角色ID
 }
+
+// Modify  user's auth structure
+type UserInfo struct {
+	PageInfo
+	NickName string `json:"nickName"`
+}

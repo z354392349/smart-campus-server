@@ -6,6 +6,7 @@ import (
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/utils"
+
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
@@ -60,11 +61,15 @@ func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter 
 //@param: info request.PageInfo
 //@return: err error, list interface{}, total int64
 
-func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+func GetUserInfoList(info request.UserInfo) (err error, list interface{}, total int64) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
+	if info.NickName != "" {
+		db.Where("nick_name LIKE ?", "%"+info.NickName+"%")
+	}
+
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Preload("Authority").Find(&userList).Error
 	return err, userList, total

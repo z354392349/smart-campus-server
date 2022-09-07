@@ -39,6 +39,20 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
 	err = global.GVA_DB.Where("username = ? AND password = ?", u.Username, u.Password).Preload("Authority").First(&user).Error
+	// 获取教师ID
+	var id uint
+	if user.Authority.AuthorityId == "02" {
+		err = global.GVA_DB.Model(model.Teacher{}).Debug().Select("id").Where("sys_user_id = ?", user.ID).Find(&id).Error
+		user.Authority.TeacherID = id
+	}
+	// 获取学生
+	if user.Authority.AuthorityId == "03" {
+		err = global.GVA_DB.Model(model.Student{}).Debug().Select("id").Where("sys_user_id = ?", user.ID).Find(&id).Error
+		user.Authority.StudentID = id
+
+	}
+	// user.Authority.StudentID = 100
+	// user.Authority.TeacherID = 1001
 	return err, &user
 }
 

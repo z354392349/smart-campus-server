@@ -24,9 +24,18 @@ func GetTeacherAttendList(info request.SearchTeacherAttend) (err error, list int
 	orderSql := "ORDER by time desc "
 	var paras []interface{}
 
+	// if info.TeacherID != 0 {
+	// 	db = db.Where("teacher_id = ?", info.TeacherID)
+	// }
+
 	if info.TeacherName != "" {
 		whereSql += "teachers.name LIKE ? "
 		paras = append(paras, "%"+info.TeacherName+"%")
+	}
+
+	if info.TeacherID != 0 {
+		whereSql += "teachers.id = ? "
+		paras = append(paras, info.TeacherID)
 	}
 
 	if info.StartTime != 0 {

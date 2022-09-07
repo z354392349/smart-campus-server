@@ -48,6 +48,10 @@ func GetCarAccessList(info request.SearchCarAccess) (err error, list interface{}
 		db = db.Where("time <= ?", info.EndTime)
 	}
 
+	if info.TeacherID != 0 {
+		db = db.Where("teacher_id = ?", info.TeacherID)
+	}
+
 	if err = db.Debug().Limit(limit).Offset(offset).Find(&carAccessList).Error; err != nil {
 		return
 	}

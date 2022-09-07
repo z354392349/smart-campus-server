@@ -46,6 +46,10 @@ func GetTeacherAccessList(info request.SearchTeacherAccess) (err error, list int
 		db = db.Where("time <= ?", info.EndTime)
 	}
 
+	if info.TeacherID != 0 {
+		db = db.Where("teacher_id = ?", info.TeacherID)
+	}
+
 	if err = db.Debug().Limit(limit).Offset(offset).Find(&teacherAccess).Error; err != nil {
 		return
 	}

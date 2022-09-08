@@ -10,6 +10,7 @@ type SysAuthority struct {
 	DeletedAt *time.Time `sql:"index"`
 
 	StudentID       uint           `json:"studentID" gorm:"-"`                                                  // 学生ID
+	GradeID         uint           `json:"gradeID" gorm:"-"`                                                    // 学生年级
 	TeacherID       uint           `json:"teacherID" gorm:"-"`                                                  // 教师
 	AuthorityId     string         `json:"authorityId" gorm:"not null;unique;primary_key;comment:角色ID;size:90"` // 角色ID
 	AuthorityName   string         `json:"authorityName" gorm:"comment:角色名"`                                    // 角色名

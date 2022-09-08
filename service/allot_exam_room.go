@@ -39,6 +39,10 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 		db = db.Where("classes.id = ?", info.ClassID)
 	}
 
+	if info.StudentID != 0 {
+		db = db.Where("students.id = ?", info.StudentID)
+	}
+
 	if err = db.Limit(limit).Offset(offset).Find(&allotExamRoomList).Error; err != nil {
 		return
 	}

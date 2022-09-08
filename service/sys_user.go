@@ -46,9 +46,11 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 		user.Authority.TeacherID = id
 	}
 	// 获取学生
+	var stu model.Student
 	if user.Authority.AuthorityId == "03" {
-		err = global.GVA_DB.Model(model.Student{}).Debug().Select("id").Where("sys_user_id = ?", user.ID).Find(&id).Error
-		user.Authority.StudentID = id
+		err = global.GVA_DB.Model(model.Student{}).Debug().Where("sys_user_id = ?", user.ID).Find(&stu).Error
+		user.Authority.StudentID = stu.ID
+		user.Authority.GradeID = stu.GradeID
 
 	}
 	// user.Authority.StudentID = 100

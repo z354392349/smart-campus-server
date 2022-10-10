@@ -168,11 +168,13 @@ func DeleteExam(exam model.Exam) (err error) {
 		return err
 	}
 
-	if err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.AllotExamRoom{}).Error; err != nil {
+	if err = global.GVA_DB.Debug().Where("exam_id = ? ", exam.ID).Delete(&model.AllotExamRoom{}).Error; err != nil {
 		return err
 	}
 
-	// TODO: 删除考试成绩表
+	if err = global.GVA_DB.Where("exam_id = ? ", exam.ID).Delete(&model.ExamResult{}).Error; err != nil {
+		return err
+	}
 	return err
 
 }

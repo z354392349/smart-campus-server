@@ -45,7 +45,7 @@ local:
 mysql:
   path: 127.0.0.1:3306
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name: student
+  db-name: school
   username: root
   password: "123456"
   max-idle-conns: 0
@@ -79,15 +79,15 @@ tencent-cos:
   path-prefix: gin-vue-admin
 timer:
   start: true
-  spec: '@daily'
+  spec: "@daily"
   detail:
-  - tableName: sys_operation_records
-    compareField: created_at
-    interval: 2160h
+    - tableName: sys_operation_records
+      compareField: created_at
+      interval: 2160h
 zap:
   level: info
   format: console
-  prefix: '[GIN-VUE-ADMIN]'
+  prefix: "[GIN-VUE-ADMIN]"
   director: log
   link-name: latest_log
   showLine: true

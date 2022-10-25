@@ -8,3 +8,7 @@
 ## SQL 多行整理为 1 行
 
 \s+ 替换为
+
+## 打包命令
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go

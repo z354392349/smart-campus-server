@@ -22,7 +22,8 @@ func GetAllotExamRoomList(info request.SearchAllotExamRoomParams) (err error, li
 	leftJoinSql7 := "left join exam_items on exam_items.course_id = allot_exam_rooms.course_id" // 考场时间
 
 	selectSql := "allot_exam_rooms.*, students.name as student_name, exams.name as exam_name, grades.name as grade_name, classes.name as class_name, courses.name as course_name, exam_rooms.name as exam_room_name, exam_rooms.address as address, exam_items.start_time, exam_items.end_time"
-	db := global.GVA_DB.Model(&model.AllotExamRoom{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Joins(leftJoinSql4).Joins(leftJoinSql5).Joins(leftJoinSql6).Joins(leftJoinSql7)
+	groupSql := "exams.id, students.id, courses.id"
+	db := global.GVA_DB.Model(&model.AllotExamRoom{}).Select(selectSql).Joins(leftJoinSql1).Joins(leftJoinSql2).Joins(leftJoinSql3).Joins(leftJoinSql4).Joins(leftJoinSql5).Joins(leftJoinSql6).Joins(leftJoinSql7).Group(groupSql)
 
 	if info.Name != "" {
 		db = db.Where("students.name LIKE ?", "%"+info.Name+"%")
